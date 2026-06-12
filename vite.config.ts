@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// base must match the GitHub repo name so assets resolve on GitHub Pages
-// (served at https://<user>.github.io/lumen/). Use '/' for local/other hosts.
+// On GitHub Pages the app is served from a project subpath
+// (https://<user>.github.io/<Repo>/). A relative base makes assets resolve
+// against the current path regardless of the repo-name casing. Use '/' locally.
 export default defineConfig({
-  base: process.env.GITHUB_PAGES === 'true' ? '/lumen/' : '/',
+  base: process.env.GITHUB_PAGES === 'true' ? './' : '/',
   plugins: [react()],
 })
