@@ -741,14 +741,16 @@ body,
   color: #cdd9f5;
 }
 .su-headline {
-  top: 116px;
+  top: 40%;
   left: 40px;
   margin: 0;
+  /* Centered vertically in the left column; 25% of the original scale. */
+  transform: translateY(-50%);
   font-family: 'Haffer XH', sans-serif;
   font-weight: 600;
-  font-size: clamp(48px, 7vw, 104px);
-  line-height: 0.98;
-  letter-spacing: -0.01em;
+  font-size: clamp(13px, 1.85vw, 26px);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
   color: #fff;
 }
 
@@ -948,8 +950,8 @@ body,
 }
 .su-call-bottom {
   bottom: 150px;
-  left: 50%;
-  transform: translateX(70px);
+  /* offset baked into `left` so `transform` is free for the drift animation */
+  left: calc(50% + 70px);
 }
 .su-elbow-bottom {
   position: absolute;
@@ -1097,9 +1099,50 @@ body,
   border-color: #7aa2ff;
 }
 
+/* Brand lockup in the bio panel header */
+.su-bio-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+}
+.su-bio-bolt {
+  color: #7aa2ff;
+  filter: drop-shadow(0 0 6px rgba(122, 162, 255, 0.7));
+}
+
+/* Gentle floating "movement" on the annotation callouts and panels. Each
+   element gets a slightly different period/phase so they drift independently
+   rather than bobbing in unison. */
+@keyframes su-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.su-move { animation: su-drift 7s ease-in-out infinite; }
+.su-call-tr.su-move   { animation-duration: 6.5s; animation-delay: -0.4s; }
+.su-call-left.su-move { animation-duration: 7.8s; animation-delay: -1.2s; }
+.su-call-bottom.su-move { animation-duration: 7.2s; animation-delay: -2s; }
+.su-meta.su-move      { animation-duration: 8.4s; animation-delay: -0.8s; }
+/* The product pillars drift line by line. */
+.su-thread-list li {
+  animation: su-drift 6.4s ease-in-out infinite;
+}
+.su-thread-list li:nth-child(2) { animation-duration: 7.1s; animation-delay: -0.6s; }
+.su-thread-list li:nth-child(3) { animation-duration: 6.8s; animation-delay: -1.1s; }
+.su-thread-list li:nth-child(4) { animation-duration: 7.4s; animation-delay: -1.7s; }
+.su-thread-list li:nth-child(5) { animation-duration: 6.6s; animation-delay: -2.3s; }
+.su-thread-list li:nth-child(6) { animation-duration: 7.6s; animation-delay: -2.9s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .su-move,
+  .su-thread-list li { animation: none; }
+}
+
 @media (max-width: 900px) {
   .su-call-tr, .su-call-left, .su-call-bottom, .su-meta, .su-bio, .su-socials, .su-threads {
     display: none;
   }
-  .su-headline { font-size: clamp(40px, 12vw, 70px); }
+  .su-headline { font-size: clamp(18px, 5vw, 30px); }
 }

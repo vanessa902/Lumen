@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Zap } from 'lucide-react'
 
 const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 // Centerpiece video (city-in-a-dome). WebM first for Chrome/Firefox, MP4
@@ -10,34 +11,17 @@ const DOME_POSTER = import.meta.env.BASE_URL + 'island-poster.jpg'
 // ~12.08s — the value the background-cast CSS animation is tuned to.
 const DOME_RATE = 0.5
 
+// Lumentrack product pillars shown bottom-left.
 const THREADS = [
-  { n: '01.', tag: '(XR/MR/VR)', label: 'PERCEPTUAL INTERFACES' },
-  { n: '02.', tag: '', label: 'EMBODIMENT' },
-  { n: '03.', tag: '', label: 'IA & AI' },
-  { n: '04.', tag: '', label: 'SYSTEM AND TOOLS' },
+  { n: '01.', label: 'Faster Proposals' },
+  { n: '02.', label: 'Automated Workflows' },
+  { n: '03.', label: 'Real-Time Install Calendar' },
+  { n: '04.', label: 'Accurate Battery + Solar Designs' },
+  { n: '05.', label: 'Commission Tracking for Every Deal' },
+  { n: '06.', label: 'Custom Permissions and Reporting' },
 ]
 
-function useLocalTime() {
-  const [t, setT] = useState('')
-  useEffect(() => {
-    const tick = () => {
-      const d = new Date()
-      let h = d.getHours()
-      const ampm = h >= 12 ? 'PM' : 'AM'
-      h = h % 12 || 12
-      const hh = String(h).padStart(2, '0')
-      const mm = String(d.getMinutes()).padStart(2, '0')
-      setT(`ZUR ${hh} ${mm} ${ampm}`)
-    }
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [])
-  return t
-}
-
 export default function SuteraSection() {
-  const time = useLocalTime()
   const rootRef = useRef<HTMLDivElement>(null)
   const vidRef = useRef<HTMLVideoElement>(null)
   const [par, setPar] = useState({ x: 0, y: 0 })
@@ -75,10 +59,6 @@ export default function SuteraSection() {
 
       {/* Top bar */}
       <img className="su-brand-logo" src={LOGO_SRC} alt="Lumentrack" draggable={false} />
-      <div className="su-time">
-        <span className="su-dim">LOCAL TIME</span>
-        <span>{time}</span>
-      </div>
 
       {/* Headline */}
       <h2 className="su-headline">
@@ -128,26 +108,25 @@ export default function SuteraSection() {
         )}
       </div>
 
-      {/* Annotation callouts */}
+      {/* Annotation callouts (gentle drift via .su-move) */}
       <div className="su-call su-call-top">
-        <span className="su-chip">CHANGE REALITY</span>
+        <span className="su-chip">Access our software</span>
         <div className="su-globe" />
         <div className="su-line-v" />
       </div>
 
-      <div className="su-call su-call-tr">
+      <div className="su-call su-call-tr su-move">
         <p>
-          WHERE IMAGINATION
+          The all-in-one operating
           <br />
-          BRANCHES INTO A<br />
-          LANDSCAPE OF
+          system for contractors and
           <br />
-          ENDLESS DIVERSITY
+          service businesses.
         </p>
         <div className="su-elbow su-elbow-tr" />
       </div>
 
-      <div className="su-call su-call-left">
+      <div className="su-call su-call-left su-move">
         <p>
           FROM DEEP ROOTS,
           <br />
@@ -159,44 +138,37 @@ export default function SuteraSection() {
         <span className="su-marker" />
       </div>
 
-      <div className="su-call su-call-bottom">
+      <div className="su-call su-call-bottom su-move">
         <p>
-          FOUNDATION
+          Connect Lumentrack
           <br />
-          DESIGNED FOR
+          to the Tools You
           <br />
-          GROWTH
+          Already Use
         </p>
         <div className="su-elbow su-elbow-bottom" />
       </div>
 
       {/* Right data panel */}
-      <div className="su-panel su-meta">
+      <div className="su-panel su-meta su-move">
         <div className="su-meta-head">
-          <span>SUTÉRA</span>
+          <span>LUMENTRACK</span>
           <span className="su-dim">/25</span>
         </div>
-        <p className="su-dim">SU (UNDERNEATH)</p>
-        <p className="su-dim">+ TERA (EARTH)</p>
-        <p className="su-meta-res">→ UNDERNEATH THE EARTH</p>
+        <p className="su-dim">ONE OPERATING SYSTEM</p>
+        <p className="su-dim">FOR YOUR WHOLE TEAM</p>
+        <p className="su-meta-res">→ ACCESS OUR SOFTWARE</p>
       </div>
 
-      {/* Bottom-left — core threads */}
+      {/* Bottom-left — product pillars */}
       <div className="su-threads">
-        <span className="su-chip su-threads-tag">[ CORE THREADS OF MY WORK ]</span>
+        <span className="su-chip su-threads-tag">[ ONE PLATFORM · EVERY WORKFLOW ]</span>
         <div className="su-threads-body">
-          <div className="su-thumbs">
-            <div className="su-thumb su-thumb-spark" />
-            <div className="su-thumb su-thumb-grid" />
-            <div className="su-thumb su-thumb-grid2" />
-            <div className="su-thumb su-thumb-grid3" />
-          </div>
           <ul className="su-thread-list">
             {THREADS.map((t) => (
               <li key={t.n}>
                 <span className="su-thread-top">
                   {t.n}
-                  {t.tag && <span className="su-thread-tag"> {t.tag}</span>}
                   <span className="su-hatch">//////</span>
                 </span>
                 <span className="su-thread-label">{t.label}</span>
@@ -209,20 +181,22 @@ export default function SuteraSection() {
       {/* Bottom-right — bio panel */}
       <div className="su-panel su-bio">
         <div className="su-bio-head">
-          <span>NOT A STUDIO — JUST ME</span>
-          <span className="su-x">×</span>
+          <span className="su-bio-brand">
+            <Zap size={13} strokeWidth={2.25} className="su-bio-bolt" />
+            LUMENTRACK
+          </span>
         </div>
         <p>
-          I'm Stella Mühlhaus and I currently work at Meta. On the side I give
-          talks, workshops, and mentor, as well as writing on design and
-          technology. This site is simply a collection of what I do and share
-          info along the way.
+          Stop jumping between 10 different tools. Lumentrack unifies CRM,
+          proposal design, production modeling, commissions, scheduling, and
+          internal workflows into one simple system that your entire team can
+          use.
         </p>
       </div>
 
       <div className="su-socials">
         <button type="button">LINKEDIN</button>
-        <button type="button">MEDIUM</button>
+        <button type="button">Youtube</button>
         <button type="button">INSTAGRAM</button>
       </div>
     </section>
