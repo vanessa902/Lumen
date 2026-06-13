@@ -678,15 +678,13 @@ body,
   height: 100vh;
   overflow: hidden;
   background:
-    /* warm sunset spill from the dome at the centre */
-    radial-gradient(40% 38% at 50% 47%, rgba(224, 158, 86, 0.26), transparent 72%),
-    /* warm bounce onto the "floor" below the dome */
-    radial-gradient(72% 58% at 50% 72%, rgba(150, 102, 56, 0.16), transparent 76%),
-    /* faint cool rim, top-right, keeps the blueprint UI cohesive */
-    radial-gradient(64% 56% at 84% 24%, rgba(40, 70, 160, 0.18), transparent 62%),
-    /* near-black base matched to the clip's surround so edges disappear */
-    radial-gradient(120% 100% at 50% 0%, #07091400, #05060e 50%, #02030a 100%),
-    #02030a;
+    /* blue glow behind the dome */
+    radial-gradient(46% 42% at 50% 46%, rgba(56, 104, 220, 0.30), transparent 70%),
+    /* cooler blue rim, top-right */
+    radial-gradient(66% 58% at 83% 22%, rgba(40, 84, 190, 0.22), transparent 62%),
+    /* deep navy-to-black base */
+    radial-gradient(120% 100% at 50% 0%, #060b1c, #04070f 55%, #01020800 100%),
+    #010206;
   color: #aebfe6;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
@@ -701,8 +699,8 @@ body,
   width: 38vw;
   height: 38vw;
   transform: translateY(-50%);
-  /* Warm glow echoing the dome's sunset (the sun sits to the right). */
-  background: radial-gradient(circle, rgba(228, 156, 84, 0.20), transparent 62%);
+  /* Cool blue glow on the right. */
+  background: radial-gradient(circle, rgba(80, 135, 255, 0.20), transparent 62%);
   filter: blur(34px);
   pointer-events: none;
   /* Same 12.08s loop as the dome cast so the whole slide breathes together. */
@@ -773,6 +771,8 @@ body,
   transform: translate(-50%, -50%);
   z-index: 1 !important;
   transition: transform 200ms ease-out;
+  /* The clip's dark surround drops out into the blue/black background. */
+  mix-blend-mode: lighten;
 }
 /* The video, centered in the wrapper with feathered edges so the black
    surround of the clip melts seamlessly into the slide background. */
@@ -813,17 +813,15 @@ body,
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 1 !important;
-  background: radial-gradient(circle, rgba(224, 158, 86, 0.30), rgba(150, 90, 50, 0.10) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(60, 110, 235, 0.30), rgba(24, 56, 150, 0.10) 45%, transparent 70%);
   filter: blur(40px);
   animation: su-dome-cast 12.08s ease-in-out infinite;
 }
 @keyframes su-dome-cast {
-  /* night-blue dusk -> warm amber peak -> deep sunset -> back, matching the
-     light swell of the looping clip */
-  0%   { opacity: 0.55; filter: blur(40px) hue-rotate(-12deg); }
-  35%  { opacity: 1;    filter: blur(40px) hue-rotate(4deg); }
-  70%  { opacity: 0.75; filter: blur(40px) hue-rotate(-20deg); }
-  100% { opacity: 0.55; filter: blur(40px) hue-rotate(-12deg); }
+  /* gentle blue swell matching the light pulse of the looping clip */
+  0%   { opacity: 0.5; }
+  45%  { opacity: 0.95; }
+  100% { opacity: 0.5; }
 }
 @media (prefers-reduced-motion: reduce) {
   .su-dome-cast { animation: none; opacity: 0.8; }
@@ -1007,10 +1005,10 @@ body,
   color: #cdd9f5 !important;
 }
 
-/* Core threads */
+/* Core threads — anchored to the top-left, just under the logo */
 .su-threads {
   left: 40px;
-  bottom: 56px;
+  top: 70px;
   max-width: 340px;
 }
 .su-threads-tag {
@@ -1107,6 +1105,36 @@ body,
 .su-socials button:hover {
   background: rgba(122, 162, 255, 0.12);
   border-color: #7aa2ff;
+}
+
+/* Title lockup over the dome */
+.su-title {
+  left: 50%;
+  top: 47%;
+  transform: translateX(-50%);
+  width: min(54vw, 620px);
+  z-index: 4 !important;
+  pointer-events: none;
+}
+.su-title-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Soft black shadow so the white lockup lifts off the video. */
+  filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.7));
+}
+/* "Connect Lumentrack…" tucked into the gap between DEMO and the APP badge. */
+.su-title-connect {
+  position: absolute;
+  left: 47%;
+  top: 71%;
+  width: 26%;
+  margin: 0;
+  font-size: clamp(7px, 0.8vw, 10px);
+  line-height: 1.35;
+  letter-spacing: 0.05em;
+  color: #cdd9f5;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* Brand logo (SVG) in the bio panel header */

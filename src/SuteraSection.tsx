@@ -6,6 +6,8 @@ const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 const DOME_WEBM = import.meta.env.BASE_URL + 'island.webm'
 const DOME_MP4 = import.meta.env.BASE_URL + 'island.mp4'
 const DOME_POSTER = import.meta.env.BASE_URL + 'island-poster.jpg'
+// Title artwork (LUMENTRACK / BOOK A DEMO / APP lockup) overlaid on the dome.
+const TITLE_SVG = import.meta.env.BASE_URL + 'title.svg'
 // Slow the clip to half speed. The source loop is 6.04s, so the slowed loop is
 // ~12.08s — the value the background-cast CSS animation is tuned to.
 const DOME_RATE = 0.5
@@ -59,12 +61,6 @@ export default function SuteraSection() {
       {/* Top bar */}
       <img className="su-brand-logo" src={LOGO_SRC} alt="Lumentrack" draggable={false} />
 
-      {/* Headline — centered vertically in the band between the logo and the
-          [ ONE PLATFORM · EVERY WORKFLOW ] chip. */}
-      <div className="su-headline-band">
-        <h2 className="su-headline">LUMENTRACK APP</h2>
-      </div>
-
       {/* Center — dome video with feathered edges + CSS placeholder fallback */}
       <div
         className="su-island-wrap"
@@ -106,6 +102,21 @@ export default function SuteraSection() {
         )}
       </div>
 
+      {/* Title lockup — sits on top of the dome with a soft shadow. The
+          "Connect Lumentrack…" line is tucked into the empty space the SVG
+          leaves between DEMO and the APP badge. */}
+      <div className="su-title">
+        <img
+          className="su-title-svg"
+          src={TITLE_SVG}
+          alt="Lumentrack — Book a Demo"
+          draggable={false}
+        />
+        <p className="su-title-connect">
+          Connect Lumentrack to the Tools You Already Use
+        </p>
+      </div>
+
       {/* Annotation callouts (gentle drift via .su-move) */}
       <div className="su-call su-call-top">
         <span className="su-chip">Access our software</span>
@@ -122,17 +133,6 @@ export default function SuteraSection() {
           service businesses.
         </p>
         <div className="su-elbow su-elbow-tr" />
-      </div>
-
-      <div className="su-call su-call-bottom su-move">
-        <p>
-          Connect Lumentrack
-          <br />
-          to the Tools You
-          <br />
-          Already Use
-        </p>
-        <div className="su-elbow su-elbow-bottom" />
       </div>
 
       {/* Bottom-left — product pillars */}
