@@ -42,6 +42,9 @@ export default function Hero() {
   )
   // Cursor-driven tilt for the centered character
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
+  // True only during a slide transition — the blurred side characters are
+  // hidden at rest and fade in while scrolling.
+  const [scrolling, setScrolling] = useState(false)
   const isAnimating = useRef(false)
 
   // Preload all images on mount
@@ -62,11 +65,13 @@ export default function Hero() {
   const navigate = useCallback((direction: 'next' | 'prev') => {
     if (isAnimating.current) return
     isAnimating.current = true
+    setScrolling(true)
     setActiveIndex((prev) =>
       direction === 'next' ? (prev + 1) % 4 : (prev + 3) % 4,
     )
     window.setTimeout(() => {
       isAnimating.current = false
+      setScrolling(false)
     }, 650)
   }, [])
 
@@ -284,11 +289,21 @@ export default function Hero() {
               )
             }
 
+            // Slide 3's character (index 2) is removed — that slide is text only.
+            if (index === 2) return null
+
             // Slide 1's character (index 0) is rendered 20% smaller.
             const baseScale = index === 0 ? 0.8 : 1
             const tiltStr = isCenter
               ? ` perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
               : ''
+            const roleStyle = styleForRole(role)
+            // Blurred side/back characters only show while scrolling.
+            const opacity = isCenter
+              ? roleStyle.opacity
+              : scrolling
+                ? roleStyle.opacity
+                : 0
             return (
               <div
                 key={item.src}
@@ -306,9 +321,10 @@ export default function Hero() {
                 style={{
                   position: 'absolute',
                   aspectRatio: '0.6 / 1',
-                  transition: `transform 650ms ${EASE}, filter 650ms ${EASE}, opacity 650ms ${EASE}, left 650ms ${EASE}`,
+                  transition: `transform 650ms ${EASE}, filter 650ms ${EASE}, opacity 300ms ${EASE}, left 650ms ${EASE}`,
                   willChange: 'transform, filter, opacity',
-                  ...styleForRole(role),
+                  ...roleStyle,
+                  opacity,
                 }}
               >
                 {/* Float wrapper: gentle continuous bob */}
@@ -431,6 +447,9 @@ function ArcsBackground() {
       <div className="th-arc th-arc-1" />
       <div className="th-arc th-arc-2" />
       <div className="th-arc th-arc-3" />
+      {/* Fast electric light racing side to side along the arcs */}
+      <div className="th-arc-bolt th-arc-bolt-a" />
+      <div className="th-arc-bolt th-arc-bolt-b" />
     </div>
   )
 }

@@ -189,6 +189,62 @@ body,
   border: 2px solid rgba(170, 205, 255, 0.95);
   box-shadow: 0 4px 22px 2px rgba(90, 150, 255, 0.7);
 }
+/* Bright bolt that races horizontally across the arcs (electric feel) */
+.th-arc-bolt {
+  position: absolute;
+  top: 0;
+  width: 45%;
+  height: 60%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 230, 255, 0.9),
+    rgba(90, 160, 255, 0.35) 38%,
+    transparent 68%
+  );
+  filter: blur(16px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.th-arc-bolt-a {
+  animation: th-arc-bolt-ltr 2.4s linear infinite;
+}
+.th-arc-bolt-b {
+  animation: th-arc-bolt-rtl 3.1s linear infinite;
+  animation-delay: 1s;
+  height: 48%;
+}
+@keyframes th-arc-bolt-ltr {
+  0% {
+    left: -45%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes th-arc-bolt-rtl {
+  0% {
+    left: 100%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    left: -45%;
+    opacity: 0;
+  }
+}
 
 /* --- Image 2: blue plasma capsule --- */
 .th-plasma-aura {
@@ -347,7 +403,8 @@ body,
   .th-plasma-aura,
   .th-plasma-spin,
   .th-plasma-core,
-  .th-laptop-glow {
+  .th-laptop-glow,
+  .th-arc-bolt {
     animation: none;
   }
   .th-laptop-rise {
