@@ -223,7 +223,7 @@ export default function Hero() {
               key={activeIndex}
               style={{
                 fontFamily: 'Anton, sans-serif',
-                fontSize: 'clamp(48px, 13vw, 210px)',
+                fontSize: 'clamp(44px, 11.5vw, 200px)',
                 fontWeight: 900,
                 color: '#ffffff',
                 opacity: 1,
@@ -231,7 +231,9 @@ export default function Hero() {
                 textTransform: 'uppercase',
                 letterSpacing: '-0.02em',
                 textAlign: 'center',
-                maxWidth: '92vw',
+                // Short headlines stay on a single line; long copy wraps.
+                whiteSpace: TITLES[activeIndex].length <= 14 ? 'nowrap' : 'normal',
+                maxWidth: TITLES[activeIndex].length <= 14 ? 'none' : '92vw',
                 animation: `th-fade 650ms ${EASE}`,
               }}
             >
@@ -265,8 +267,8 @@ export default function Hero() {
                     position: 'absolute',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    top: isMobile ? '42%' : '38%',
-                    width: isMobile ? '98vw' : 'min(82vw, 1180px)',
+                    top: isMobile ? '40%' : '38%',
+                    width: isMobile ? '90vw' : 'min(54vw, 760px)',
                     zIndex: 20,
                   }}
                 >
