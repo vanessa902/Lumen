@@ -42,9 +42,6 @@ export default function Hero() {
   )
   // Cursor-driven tilt for the centered character
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
-  // True only during a slide transition — the blurred side characters are
-  // hidden at rest and fade in while scrolling.
-  const [scrolling, setScrolling] = useState(false)
   const isAnimating = useRef(false)
 
   // Preload all images on mount
@@ -65,13 +62,11 @@ export default function Hero() {
   const navigate = useCallback((direction: 'next' | 'prev') => {
     if (isAnimating.current) return
     isAnimating.current = true
-    setScrolling(true)
     setActiveIndex((prev) =>
       direction === 'next' ? (prev + 1) % 4 : (prev + 3) % 4,
     )
     window.setTimeout(() => {
       isAnimating.current = false
-      setScrolling(false)
     }, 650)
   }, [])
 
@@ -256,10 +251,15 @@ export default function Hero() {
             const role = roleFor(index)
             const isCenter = role === 'center'
 
-            // Special treatment for slide 2's laptop mockup when centered:
-            // sits ~50px below the headline, is cut off at the bottom of the
-            // hero, rises from below while growing, with a moving blue light.
-            if (isCenter && index === 1) {
+            // Only the active section's character is rendered. No rotating or
+            // blurred side/back figures appear during scroll — each section
+            // just shows its own element.
+            if (!isCenter) return null
+
+            // Special treatment for slide 2's laptop mockup: sits below the
+            // headline, cropped at the hero's bottom edge, rising from below
+            // while growing, with a moving blue light.
+            if (index === 1) {
               return (
                 <div
                   key={item.src}
@@ -267,7 +267,7 @@ export default function Hero() {
                     position: 'absolute',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    top: isMobile ? '40%' : '38%',
+                    top: isMobile ? '24%' : '22%',
                     width: isMobile ? '90vw' : 'min(54vw, 760px)',
                     zIndex: 20,
                   }}
@@ -296,37 +296,23 @@ export default function Hero() {
 
             // Slide 1's character (index 0) is rendered 20% smaller.
             const baseScale = index === 0 ? 0.8 : 1
-            const tiltStr = isCenter
-              ? ` perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
-              : ''
-            const roleStyle = styleForRole(role)
-            // Blurred side/back characters only show while scrolling.
-            const opacity = isCenter
-              ? roleStyle.opacity
-              : scrolling
-                ? roleStyle.opacity
-                : 0
+            const tiltStr = ` perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
             return (
               <div
                 key={item.src}
-                onMouseMove={
-                  isCenter
-                    ? (e) => {
-                        const r = e.currentTarget.getBoundingClientRect()
-                        const px = (e.clientX - r.left) / r.width - 0.5
-                        const py = (e.clientY - r.top) / r.height - 0.5
-                        setTilt({ rx: -py * 16, ry: px * 16 })
-                      }
-                    : undefined
-                }
-                onMouseLeave={isCenter ? () => setTilt({ rx: 0, ry: 0 }) : undefined}
+                onMouseMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect()
+                  const px = (e.clientX - r.left) / r.width - 0.5
+                  const py = (e.clientY - r.top) / r.height - 0.5
+                  setTilt({ rx: -py * 16, ry: px * 16 })
+                }}
+                onMouseLeave={() => setTilt({ rx: 0, ry: 0 })}
                 style={{
                   position: 'absolute',
                   aspectRatio: '0.6 / 1',
-                  transition: `transform 650ms ${EASE}, filter 650ms ${EASE}, opacity 300ms ${EASE}, left 650ms ${EASE}`,
-                  willChange: 'transform, filter, opacity',
-                  ...roleStyle,
-                  opacity,
+                  transition: `transform 650ms ${EASE}, filter 650ms ${EASE}, left 650ms ${EASE}`,
+                  willChange: 'transform, filter',
+                  ...styleForRole(role),
                 }}
               >
                 {/* Float wrapper: gentle continuous bob */}
