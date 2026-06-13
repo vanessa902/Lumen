@@ -1,12 +1,19 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 
+// Slide 1's character is a local image uploaded to /public. Using a runtime
+// path (not an import) so the build succeeds even before the file is added.
+const SOLAR_SRC = import.meta.env.BASE_URL + 'solar-panel.png'
+
 const IMAGES = [
-  { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/1.02464a56.png', bg: '#F4845F', panel: '#F79B7F' },
+  { src: SOLAR_SRC, bg: '#F4845F', panel: '#F79B7F' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/2.b977faab.png', bg: '#6BBF7A', panel: '#85CC92' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png', bg: '#E882B4', panel: '#ED9DC4' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png', bg: '#6EB5FF', panel: '#8DC4FF' },
 ]
+
+// Giant background headline shown per slide (temporary copy).
+const TITLES = ['One platform.', 'Every part of your business.', '', '']
 
 const EASE = 'cubic-bezier(0.4,0,0.2,1)'
 
@@ -182,25 +189,28 @@ export default function Hero() {
           }}
         />
 
-        {/* 2. Giant ghost text */}
+        {/* 2. Giant ghost text (per-slide headline) */}
         <div
-          className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none"
+          className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none px-4"
           style={{ zIndex: 2, top: '18%' }}
         >
           <span
+            key={activeIndex}
             style={{
               fontFamily: 'Anton, sans-serif',
-              fontSize: 'clamp(90px, 28vw, 380px)',
+              fontSize: 'clamp(48px, 13vw, 210px)',
               fontWeight: 900,
               color: '#ffffff',
               opacity: 1,
-              lineHeight: 1,
+              lineHeight: 0.95,
               textTransform: 'uppercase',
               letterSpacing: '-0.02em',
-              whiteSpace: 'nowrap',
+              textAlign: 'center',
+              maxWidth: '92vw',
+              animation: `th-fade 650ms ${EASE}`,
             }}
           >
-            3D SHAPE
+            {TITLES[activeIndex]}
           </span>
         </div>
 
