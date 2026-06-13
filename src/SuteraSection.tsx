@@ -8,9 +8,8 @@ const DOME_MP4 = import.meta.env.BASE_URL + 'island.mp4'
 const DOME_POSTER = import.meta.env.BASE_URL + 'island-poster.jpg'
 // Title artwork (LUMENTRACK / BOOK A DEMO / APP lockup) overlaid on the dome.
 const TITLE_SVG = import.meta.env.BASE_URL + 'title.svg'
-// Slow the clip to half speed. The source loop is 6.04s, so the slowed loop is
-// ~12.08s — the value the background-cast CSS animation is tuned to.
-const DOME_RATE = 0.5
+// Play the clip at normal speed.
+const DOME_RATE = 1
 
 // Lumentrack product pillars shown bottom-left.
 const THREADS = [

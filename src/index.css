@@ -703,8 +703,8 @@ body,
   background: radial-gradient(circle, rgba(80, 135, 255, 0.20), transparent 62%);
   filter: blur(34px);
   pointer-events: none;
-  /* Same 12.08s loop as the dome cast so the whole slide breathes together. */
-  animation: su-dome-cast 12.08s ease-in-out infinite;
+  /* Same 6.04s loop as the dome cast so the whole slide breathes together. */
+  animation: su-dome-cast 6.04s ease-in-out infinite;
 }
 .su-grid {
   position: absolute;
@@ -800,8 +800,7 @@ body,
 }
 
 /* Warm light cast around the dome. The colour/intensity cycles over one
-   slowed video loop (6.04s / 0.5 = 12.08s) so the background shifts in time
-   with the footage. */
+   video loop (6.04s) so the background shifts in time with the footage. */
 .su-dome-cast {
   position: absolute;
   left: 50%;
@@ -815,7 +814,7 @@ body,
   z-index: 1 !important;
   background: radial-gradient(circle, rgba(60, 110, 235, 0.30), rgba(24, 56, 150, 0.10) 45%, transparent 70%);
   filter: blur(40px);
-  animation: su-dome-cast 12.08s ease-in-out infinite;
+  animation: su-dome-cast 6.04s ease-in-out infinite;
 }
 @keyframes su-dome-cast {
   /* gentle blue swell matching the light pulse of the looping clip */

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronDown } from 'lucide-react'
-import PolygonSection from './PolygonSection'
 import SuteraSection from './SuteraSection'
 
 // Local character images uploaded to /public. Using runtime paths (not
@@ -66,22 +65,16 @@ export default function Hero() {
   const [s3, setS3] = useState(0)
   // Section 1 dome video grow step (0..DOME_MAX)
   const [dome, setDome] = useState(0)
-  // 'hero' = the scroll-jacked carousel, 'polygon' = the section below it.
-  const [phase, setPhase] = useState<'hero' | 'polygon'>('hero')
-  // Drives the blur + fade-to-black overlay between phases.
-  const [transitioning, setTransitioning] = useState(false)
   const isAnimating = useRef(false)
   // Refs mirror state so the scroll handler always reads current values.
   const activeRef = useRef(0)
   const zoomRef = useRef(0)
   const s3Ref = useRef(0)
   const domeRef = useRef(0)
-  const phaseRef = useRef<'hero' | 'polygon'>('hero')
   activeRef.current = activeIndex
   zoomRef.current = zoom
   s3Ref.current = s3
   domeRef.current = dome
-  phaseRef.current = phase
 
   // Preload all images on mount
   useEffect(() => {
@@ -123,22 +116,8 @@ export default function Hero() {
     }, 650)
   }, [])
 
-  // Blur + fade-to-black transition between the hero and the Polygon section.
-  const transition = useCallback((to: 'hero' | 'polygon') => {
-    isAnimating.current = true
-    setTransitioning(true)
-    window.setTimeout(() => {
-      setPhase(to)
-      phaseRef.current = to
-      const sc = document.getElementById('poly-scroller')
-      if (sc) sc.scrollTop = 0
-      setTransitioning(false)
-      window.setTimeout(() => (isAnimating.current = false), 560)
-    }, 520)
-  }, [])
-
   // Hero-phase scroll: section 2 zooms the mockup through ZOOM_MAX steps before
-  // advancing; the last section scrolls down into the Polygon section.
+  // advancing; the last section is the end of the carousel.
   const handleHeroScroll = useCallback(
     (dir: 'down' | 'up') => {
       if (isAnimating.current) return
@@ -196,28 +175,18 @@ export default function Hero() {
       }
       if (dir === 'down') {
         if (ai < 3) go('next')
-        else transition('polygon')
+        // ai === 3 is the last section; nothing follows it.
       } else if (ai > 0) {
         go('prev')
       }
     },
-    [go, transition],
+    [go],
   )
 
   // Drive sections with the scroll wheel / trackpad and vertical swipes.
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) < 8) return
-      if (phaseRef.current === 'polygon') {
-        // Native scroll inside the section; only intercept an up-scroll at the
-        // very top to return to the hero.
-        const sc = document.getElementById('poly-scroller')
-        if (e.deltaY < 0 && (sc?.scrollTop ?? 0) <= 2 && !isAnimating.current) {
-          e.preventDefault()
-          transition('hero')
-        }
-        return
-      }
       e.preventDefault()
       handleHeroScroll(e.deltaY > 0 ? 'down' : 'up')
     }
@@ -229,14 +198,6 @@ export default function Hero() {
     const onTouchMove = (e: TouchEvent) => {
       const delta = touchStartY - e.touches[0].clientY
       if (Math.abs(delta) < 40) return
-      if (phaseRef.current === 'polygon') {
-        const sc = document.getElementById('poly-scroller')
-        if (delta < 0 && (sc?.scrollTop ?? 0) <= 2 && !isAnimating.current) {
-          e.preventDefault()
-          transition('hero')
-        }
-        return
-      }
       e.preventDefault()
       handleHeroScroll(delta > 0 ? 'down' : 'up')
       touchStartY = e.touches[0].clientY
@@ -250,7 +211,7 @@ export default function Hero() {
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
     }
-  }, [handleHeroScroll, transition])
+  }, [handleHeroScroll])
 
   const center = activeIndex
   const left = (activeIndex + 3) % 4
@@ -537,37 +498,6 @@ export default function Hero() {
       </div>
     </div>
 
-    {/* The section that follows below the hero */}
-    {phase === 'polygon' && (
-      <div
-        id="poly-scroller"
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 100,
-          overflowY: 'auto',
-          background: '#04060d',
-          WebkitOverflowScrolling: 'touch',
-        }}
-      >
-        <PolygonSection />
-      </div>
-    )}
-
-    {/* Blur + fade-to-black transition overlay */}
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 300,
-        background: '#000',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
-        opacity: transitioning ? 1 : 0,
-        transition: 'opacity 500ms ease',
-        pointerEvents: transitioning ? 'auto' : 'none',
-      }}
-    />
     </>
   )
 }
