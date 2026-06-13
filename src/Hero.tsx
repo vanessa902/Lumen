@@ -29,6 +29,12 @@ const EASE = 'cubic-bezier(0.4,0,0.2,1)'
 // scroll advances to the following section.
 const ZOOM_MAX = 3
 
+// Section 3 ("Every part of your business.") drops its text one extra 10% step
+// on scroll before advancing to the next section.
+const S3_MAX = 1
+const S3_BASE_TOP = 38 // %
+const S3_STEP = 10 // % per scroll step
+
 const GRAIN_SVG =
   "data:image/svg+xml," +
   encodeURIComponent(
@@ -51,6 +57,8 @@ export default function Hero() {
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
   // Section 2 mockup zoom level (0..ZOOM_MAX)
   const [zoom, setZoom] = useState(0)
+  // Section 3 extra text-drop step (0..S3_MAX)
+  const [s3, setS3] = useState(0)
   // 'hero' = the scroll-jacked carousel, 'polygon' = the section below it.
   const [phase, setPhase] = useState<'hero' | 'polygon'>('hero')
   // Drives the blur + fade-to-black overlay between phases.
@@ -59,9 +67,11 @@ export default function Hero() {
   // Refs mirror state so the scroll handler always reads current values.
   const activeRef = useRef(0)
   const zoomRef = useRef(0)
+  const s3Ref = useRef(0)
   const phaseRef = useRef<'hero' | 'polygon'>('hero')
   activeRef.current = activeIndex
   zoomRef.current = zoom
+  s3Ref.current = s3
   phaseRef.current = phase
 
   // Preload all images on mount
@@ -89,6 +99,10 @@ export default function Hero() {
       const z = next === 1 ? (direction === 'next' ? 0 : ZOOM_MAX) : 0
       zoomRef.current = z
       setZoom(z)
+      // Section 3 starts un-dropped from above, fully dropped from below.
+      const s = next === 2 ? (direction === 'next' ? 0 : S3_MAX) : 0
+      s3Ref.current = s
+      setS3(s)
       return next
     })
     window.setTimeout(() => {
@@ -130,6 +144,23 @@ export default function Hero() {
           zoomRef.current = z - 1
           setZoom(z - 1)
           window.setTimeout(() => (isAnimating.current = false), 220)
+          return
+        }
+      }
+      if (ai === 2) {
+        const s = s3Ref.current
+        if (dir === 'down' && s < S3_MAX) {
+          isAnimating.current = true
+          s3Ref.current = s + 1
+          setS3(s + 1)
+          window.setTimeout(() => (isAnimating.current = false), 320)
+          return
+        }
+        if (dir === 'up' && s > 0) {
+          isAnimating.current = true
+          s3Ref.current = s - 1
+          setS3(s - 1)
+          window.setTimeout(() => (isAnimating.current = false), 320)
           return
         }
       }
@@ -292,8 +323,13 @@ export default function Hero() {
         {/* 2. Giant ghost text / logo (per-slide headline) */}
         <div
           className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none px-4"
-          // Section 3 ("Every part of your business.") sits a bit below center.
-          style={{ zIndex: 2, top: activeIndex === 2 ? '38%' : '18%' }}
+          // Section 3 ("Every part of your business.") starts below center and
+          // drops one extra 10% step on scroll.
+          style={{
+            zIndex: 2,
+            top: activeIndex === 2 ? `${S3_BASE_TOP + s3 * S3_STEP}%` : '18%',
+            transition: `top 450ms ${EASE}`,
+          }}
         >
           <span
             key={activeIndex}
