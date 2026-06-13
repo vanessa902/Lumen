@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import PolygonSection from './PolygonSection'
+import SuteraSection from './SuteraSection'
 
 // Local character images uploaded to /public. Using runtime paths (not
 // imports) so the build succeeds even before the files are added.
@@ -513,6 +514,7 @@ export default function Hero() {
           WebkitOverflowScrolling: 'touch',
         }}
       >
+        <SuteraSection />
         <PolygonSection />
       </div>
     )}
