@@ -292,8 +292,8 @@ export default function Hero() {
         {/* 2. Giant ghost text / logo (per-slide headline) */}
         <div
           className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none px-4"
-          // Section 3 ("Every part of your business.") sits 40% lower.
-          style={{ zIndex: 2, top: activeIndex === 2 ? '58%' : '18%' }}
+          // Section 3 ("Every part of your business.") sits a bit below center.
+          style={{ zIndex: 2, top: activeIndex === 2 ? '28%' : '18%' }}
         >
           <span
             key={activeIndex}

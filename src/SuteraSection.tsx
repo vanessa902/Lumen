@@ -62,7 +62,7 @@ export default function SuteraSection() {
       {/* Headline — centered vertically in the band between the logo and the
           [ ONE PLATFORM · EVERY WORKFLOW ] chip. */}
       <div className="su-headline-band">
-        <h2 className="su-headline">LUMENTRACKAPP</h2>
+        <h2 className="su-headline">LUMENTRACK APP</h2>
       </div>
 
       {/* Center — dome video with feathered edges + CSS placeholder fallback */}
