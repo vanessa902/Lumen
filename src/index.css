@@ -742,18 +742,24 @@ body,
   letter-spacing: 0.2em;
   color: #cdd9f5;
 }
-.su-headline {
-  top: 40%;
+/* Band spanning from just below the logo (top) to just above the threads
+   chip (bottom); the headline is centered within it. */
+.su-headline-band {
   left: 40px;
+  top: 52px;
+  bottom: 360px;
+  display: flex;
+  align-items: center;
+}
+.su-headline {
   margin: 0;
-  /* Centered vertically in the left column; 25% of the original scale. */
-  transform: translateY(-50%);
   font-family: 'Haffer XH', sans-serif;
   font-weight: 600;
-  font-size: clamp(13px, 1.85vw, 26px);
-  line-height: 1.05;
-  letter-spacing: 0.02em;
+  font-size: clamp(22px, 2.5vw, 34px);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
   color: #fff;
+  white-space: nowrap;
 }
 
 /* Dome video — centerpiece + placeholder fallback */
@@ -1137,5 +1143,6 @@ body,
   .su-call-tr, .su-call-left, .su-call-bottom, .su-meta, .su-bio, .su-socials, .su-threads {
     display: none;
   }
-  .su-headline { font-size: clamp(18px, 5vw, 30px); }
+  .su-headline-band { bottom: auto; top: 50%; transform: translateY(-50%); }
+  .su-headline { font-size: clamp(18px, 5vw, 30px); white-space: normal; }
 }

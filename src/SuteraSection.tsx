@@ -59,12 +59,17 @@ export default function SuteraSection() {
       {/* Top bar */}
       <img className="su-brand-logo" src={LOGO_SRC} alt="Lumentrack" draggable={false} />
 
-      {/* Headline */}
-      <h2 className="su-headline">
-        BOOK A
-        <br />
-        DEMO
-      </h2>
+      {/* Headline — centered vertically in the band between the logo and the
+          [ ONE PLATFORM · EVERY WORKFLOW ] chip. */}
+      <div className="su-headline-band">
+        <h2 className="su-headline">
+          TRANSFORM YOUR
+          <br />
+          BUSINESS WITH
+          <br />
+          INTELLIGENT AUTOMATION
+        </h2>
+      </div>
 
       {/* Center — dome video with feathered edges + CSS placeholder fallback */}
       <div
