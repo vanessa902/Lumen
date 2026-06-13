@@ -8,18 +8,17 @@ import SuteraSection from './SuteraSection'
 const SOLAR_SRC = import.meta.env.BASE_URL + 'solar-panel.png'
 const CHAR2_SRC = import.meta.env.BASE_URL + 'character-2.png'
 
-// Slide 1's headline is the LUMENTRACK wordmark (SVG in /public).
-const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
-
+// Slide 1 = the SUTÉRA section (no carousel character). Slide 2 = laptop,
+// slide 3 = text only, slide 4 = solar panel.
 const IMAGES = [
-  { src: SOLAR_SRC, bg: '#F4845F', panel: '#F79B7F' },
+  { src: SOLAR_SRC, bg: '#04060d', panel: '#04060d' },
   { src: CHAR2_SRC, bg: '#6BBF7A', panel: '#85CC92' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png', bg: '#E882B4', panel: '#ED9DC4' },
-  { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png', bg: '#6EB5FF', panel: '#8DC4FF' },
+  { src: SOLAR_SRC, bg: '#6EB5FF', panel: '#8DC4FF' },
 ]
 
-// Giant background headline per slide. Slide 0 uses the LUMENTRACK SVG
-// wordmark (handled separately); the rest use temporary copy.
+// Giant background headline per slide. Slide 1 is the SUTÉRA section, slide 4
+// shows the solar panel — both without a headline.
 const TITLES = ['', 'One platform.', 'Every part of your business.', '']
 
 const EASE = 'cubic-bezier(0.4,0,0.2,1)'
@@ -121,14 +120,14 @@ export default function Hero() {
           isAnimating.current = true
           zoomRef.current = z + 1
           setZoom(z + 1)
-          window.setTimeout(() => (isAnimating.current = false), 420)
+          window.setTimeout(() => (isAnimating.current = false), 220)
           return
         }
         if (dir === 'up' && z > 0) {
           isAnimating.current = true
           zoomRef.current = z - 1
           setZoom(z - 1)
-          window.setTimeout(() => (isAnimating.current = false), 420)
+          window.setTimeout(() => (isAnimating.current = false), 220)
           return
         }
       }
@@ -273,6 +272,9 @@ export default function Hero() {
           ))}
         </div>
 
+        {/* Shared blueprint grid behind every slider */}
+        <div className="su-grid" style={{ position: 'absolute', inset: 0, zIndex: 1 }} />
+
         {/* 1. Grain overlay */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -290,40 +292,26 @@ export default function Hero() {
           className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none px-4"
           style={{ zIndex: 2, top: '18%' }}
         >
-          {activeIndex === 0 ? (
-            <img
-              key="logo"
-              src={LOGO_SRC}
-              alt="LUMENTRACK"
-              draggable={false}
-              style={{
-                width: 'min(88vw, 880px)',
-                height: 'auto',
-                animation: `th-fade 650ms ${EASE}`,
-              }}
-            />
-          ) : (
-            <span
-              key={activeIndex}
-              style={{
-                fontFamily: "'Haffer XH', sans-serif",
-                fontSize: 'clamp(44px, 11.5vw, 200px)',
-                fontWeight: 900,
-                color: '#ffffff',
-                opacity: 1,
-                lineHeight: 0.95,
-                textTransform: 'uppercase',
-                letterSpacing: '-0.02em',
-                textAlign: 'center',
-                // Short headlines stay on a single line; long copy wraps.
-                whiteSpace: TITLES[activeIndex].length <= 14 ? 'nowrap' : 'normal',
-                maxWidth: TITLES[activeIndex].length <= 14 ? 'none' : '92vw',
-                animation: `th-fade 650ms ${EASE}`,
-              }}
-            >
-              {TITLES[activeIndex]}
-            </span>
-          )}
+          <span
+            key={activeIndex}
+            style={{
+              fontFamily: "'Haffer XH', sans-serif",
+              fontSize: 'clamp(44px, 11.5vw, 200px)',
+              fontWeight: 900,
+              color: '#ffffff',
+              opacity: 1,
+              lineHeight: 0.95,
+              textTransform: 'uppercase',
+              letterSpacing: '-0.02em',
+              textAlign: 'center',
+              // Short headlines stay on a single line; long copy wraps.
+              whiteSpace: TITLES[activeIndex].length <= 14 ? 'nowrap' : 'normal',
+              maxWidth: TITLES[activeIndex].length <= 14 ? 'none' : '92vw',
+              animation: `th-fade 650ms ${EASE}`,
+            }}
+          >
+            {TITLES[activeIndex]}
+          </span>
         </div>
 
         {/* 3. Top-left brand label */}
@@ -366,7 +354,7 @@ export default function Hero() {
                       style={{
                         transform: `scale(${1 + zoom * 0.34})`,
                         transformOrigin: 'center 40%',
-                        transition: `transform 500ms ${EASE}`,
+                        transition: `transform 280ms ${EASE}`,
                       }}
                     >
                       <div className="th-laptop-glow" />
@@ -388,11 +376,12 @@ export default function Hero() {
               )
             }
 
-            // Slide 3's character (index 2) is removed — that slide is text only.
-            if (index === 2) return null
+            // Slide 1 is the SUTÉRA section and slide 3 is text only — neither
+            // renders a carousel character.
+            if (index === 0 || index === 2) return null
 
-            // Slide 1's character (index 0) is rendered 20% smaller.
-            const baseScale = index === 0 ? 0.8 : 1
+            // The solar panel is rendered 20% smaller.
+            const baseScale = item.src === SOLAR_SRC ? 0.8 : 1
             const tiltStr = ` perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
             return (
               <div
@@ -498,6 +487,20 @@ export default function Hero() {
             <ArrowRight className="w-5 h-5 sm:w-8 sm:h-8" strokeWidth={2.25} />
           </a>
         </div>
+
+        {/* Slide 1 = the SUTÉRA section (covers the TOONHUB chrome) */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 70,
+            opacity: activeIndex === 0 ? 1 : 0,
+            pointerEvents: activeIndex === 0 ? 'auto' : 'none',
+            transition: `opacity 650ms ${EASE}`,
+          }}
+        >
+          <SuteraSection />
+        </div>
       </div>
     </div>
 
@@ -514,7 +517,6 @@ export default function Hero() {
           WebkitOverflowScrolling: 'touch',
         }}
       >
-        <SuteraSection />
         <PolygonSection />
       </div>
     )}

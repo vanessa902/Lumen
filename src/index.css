@@ -197,29 +197,29 @@ body,
   border: 2px solid rgba(170, 205, 255, 0.95);
   box-shadow: 0 4px 22px 2px rgba(90, 150, 255, 0.7);
 }
-/* Bright bolt that races horizontally across the arcs (electric feel) */
+/* Small bright bolt that races horizontally across the arcs (electric feel) */
 .th-arc-bolt {
   position: absolute;
-  top: 0;
-  width: 45%;
-  height: 60%;
+  top: 6%;
+  width: 22%;
+  height: 30%;
   background: radial-gradient(
     ellipse at center,
-    rgba(200, 230, 255, 0.9),
-    rgba(90, 160, 255, 0.35) 38%,
+    rgba(200, 230, 255, 0.5),
+    rgba(90, 160, 255, 0.18) 38%,
     transparent 68%
   );
-  filter: blur(16px);
+  filter: blur(10px);
   mix-blend-mode: screen;
   pointer-events: none;
 }
 .th-arc-bolt-a {
-  animation: th-arc-bolt-ltr 2.4s linear infinite;
+  animation: th-arc-bolt-ltr 1.7s linear infinite;
 }
 .th-arc-bolt-b {
-  animation: th-arc-bolt-rtl 3.1s linear infinite;
-  animation-delay: 1s;
-  height: 48%;
+  animation: th-arc-bolt-rtl 2.2s linear infinite;
+  animation-delay: 0.7s;
+  height: 24%;
 }
 @keyframes th-arc-bolt-ltr {
   0% {
