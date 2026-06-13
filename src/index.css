@@ -14,3 +14,14 @@ body,
   width: 100%;
   height: 100%;
 }
+
+/* Subtle nudge for the "Scroll" hint chevron */
+@keyframes toonhub-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}

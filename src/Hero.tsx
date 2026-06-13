@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 
 const IMAGES = [
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/1.02464a56.png', bg: '#F4845F', panel: '#F79B7F' },
@@ -45,7 +45,7 @@ export default function Hero() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  const navigate = (direction: 'next' | 'prev') => {
+  const navigate = useCallback((direction: 'next' | 'prev') => {
     if (isAnimating.current) return
     isAnimating.current = true
     setActiveIndex((prev) =>
@@ -54,7 +54,39 @@ export default function Hero() {
     window.setTimeout(() => {
       isAnimating.current = false
     }, 650)
-  }
+  }, [])
+
+  // Advance the carousel with the scroll wheel / trackpad (down = next, up =
+  // prev) and with vertical swipes on touch devices. The 650ms animation lock
+  // inside `navigate` throttles rapid wheel/swipe events to one step at a time.
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) < 8) return
+      e.preventDefault()
+      navigate(e.deltaY > 0 ? 'next' : 'prev')
+    }
+
+    let touchStartY = 0
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      const delta = touchStartY - e.touches[0].clientY
+      if (Math.abs(delta) < 40) return
+      e.preventDefault()
+      navigate(delta > 0 ? 'next' : 'prev')
+      touchStartY = e.touches[0].clientY
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('touchstart', onTouchStart, { passive: false })
+    window.addEventListener('touchmove', onTouchMove, { passive: false })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+    }
+  }, [navigate])
 
   const center = activeIndex
   const left = (activeIndex + 3) % 4
@@ -196,7 +228,7 @@ export default function Hero() {
           })}
         </div>
 
-        {/* 5. Bottom-left text + nav buttons */}
+        {/* 5. Bottom-left text + scroll hint */}
         <div
           className="absolute bottom-6 left-4 sm:bottom-20 sm:left-24"
           style={{ zIndex: 60, maxWidth: 320 }}
@@ -214,13 +246,16 @@ export default function Hero() {
             The artwork is stunning, shipped fully prepared. The finish is a vision,
             the 3D craft is flawless. Many thanks! Wishing you the win. Order now.
           </p>
-          <div className="flex items-center gap-3">
-            <NavButton onClick={() => navigate('prev')} label="Previous">
-              <ArrowLeft size={26} strokeWidth={2.25} color="#ffffff" />
-            </NavButton>
-            <NavButton onClick={() => navigate('next')} label="Next">
-              <ArrowRight size={26} strokeWidth={2.25} color="#ffffff" />
-            </NavButton>
+          <div
+            className="flex items-center gap-2 uppercase text-xs font-semibold select-none"
+            style={{ color: '#ffffff', opacity: 0.9, letterSpacing: '0.18em' }}
+          >
+            Scroll
+            <ChevronDown
+              size={18}
+              strokeWidth={2.25}
+              style={{ animation: 'toonhub-bounce 1.6s ease-in-out infinite' }}
+            />
           </div>
         </div>
 
@@ -253,39 +288,5 @@ export default function Hero() {
         </div>
       </div>
     </div>
-  )
-}
-
-function NavButton({
-  onClick,
-  label,
-  children,
-}: {
-  onClick: () => void
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={onClick}
-      className="flex items-center justify-center rounded-full w-12 h-12 sm:w-16 sm:h-16"
-      style={{
-        backgroundColor: 'transparent',
-        border: '2px solid #ffffff',
-        transition: 'transform 150ms, background-color 150ms',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'scale(1.08)'
-        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'scale(1)'
-        e.currentTarget.style.backgroundColor = 'transparent'
-      }}
-    >
-      {children}
-    </button>
   )
 }
