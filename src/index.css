@@ -15,6 +15,17 @@ body,
   height: 100%;
 }
 
+/* Gentle floating bob for the carousel characters */
+@keyframes th-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
 /* Crossfade for the per-slide giant headline */
 @keyframes th-fade {
   from {
@@ -134,8 +145,164 @@ body,
   }
 }
 
+/* --- Image 1: blue light arcs --- */
+.th-arc-glow {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  height: 46vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(70, 130, 255, 0.6),
+    rgba(30, 60, 200, 0.18) 45%,
+    transparent 72%
+  );
+  filter: blur(24px);
+}
+.th-arc {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: transparent;
+}
+.th-arc-1 {
+  width: 210vw;
+  height: 112vh;
+  top: -80vh;
+  border: 2px solid rgba(90, 150, 255, 0.5);
+  box-shadow: 0 8px 34px 2px rgba(60, 120, 255, 0.4);
+}
+.th-arc-2 {
+  width: 155vw;
+  height: 96vh;
+  top: -67vh;
+  border: 2px solid rgba(120, 170, 255, 0.7);
+  box-shadow: 0 6px 26px 2px rgba(70, 130, 255, 0.5);
+}
+.th-arc-3 {
+  width: 108vw;
+  height: 82vh;
+  top: -57vh;
+  border: 2px solid rgba(170, 205, 255, 0.95);
+  box-shadow: 0 4px 22px 2px rgba(90, 150, 255, 0.7);
+}
+
+/* --- Image 2: blue plasma capsule --- */
+.th-plasma-aura {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 85vw;
+  height: 85vh;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(40, 90, 255, 0.45),
+    rgba(20, 40, 160, 0.15) 40%,
+    transparent 70%
+  );
+  filter: blur(40px);
+  animation: th-aura 8s ease-in-out infinite;
+}
+.th-plasma-spin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  animation: th-plasma-sway 13s ease-in-out infinite;
+}
+.th-plasma-body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  width: 64vw;
+  height: 15vh;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(30, 80, 255, 0.65) 28%,
+    rgba(160, 205, 255, 0.95) 48%,
+    rgba(40, 90, 255, 0.7) 66%,
+    transparent 100%
+  );
+  box-shadow: 0 0 70px 12px rgba(45, 95, 255, 0.6);
+  filter: blur(2px);
+}
+.th-plasma-ring {
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(150, 195, 255, 0.6);
+  box-shadow: 0 0 18px rgba(70, 130, 255, 0.55),
+    inset 0 0 16px rgba(70, 130, 255, 0.4);
+}
+.th-plasma-ring-a {
+  left: 10vw;
+  width: 6vw;
+  height: 19vh;
+}
+.th-plasma-ring-b {
+  left: -13vw;
+  width: 6vw;
+  height: 15vh;
+}
+.th-plasma-core {
+  position: absolute;
+  left: -3vw;
+  top: 0;
+  width: 5vw;
+  height: 5vw;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #eaf2ff, #6aa0ff 42%, transparent 70%);
+  box-shadow: 0 0 55px 14px rgba(120, 170, 255, 0.9);
+  animation: th-core-pulse 3.2s ease-in-out infinite;
+}
+@keyframes th-aura {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+@keyframes th-plasma-sway {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-37deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-31deg) scale(1.05);
+  }
+}
+@keyframes th-core-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .th-blob.th-anim {
+  .th-blob.th-anim,
+  .th-plasma-aura,
+  .th-plasma-spin,
+  .th-plasma-core {
     animation: none;
   }
 }

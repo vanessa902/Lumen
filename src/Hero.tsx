@@ -39,6 +39,8 @@ export default function Hero() {
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < 640 : false,
   )
+  // Cursor-driven tilt for the centered character
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
   const isAnimating = useRef(false)
 
   // Preload all images on mount
@@ -244,9 +246,26 @@ export default function Hero() {
         <div className="absolute inset-0" style={{ zIndex: 3 }}>
           {IMAGES.map((item, index) => {
             const role = roleFor(index)
+            const isCenter = role === 'center'
+            // Slide 1's character (index 0) is rendered 20% smaller.
+            const baseScale = index === 0 ? 0.8 : 1
+            const tiltStr = isCenter
+              ? ` perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
+              : ''
             return (
               <div
                 key={item.src}
+                onMouseMove={
+                  isCenter
+                    ? (e) => {
+                        const r = e.currentTarget.getBoundingClientRect()
+                        const px = (e.clientX - r.left) / r.width - 0.5
+                        const py = (e.clientY - r.top) / r.height - 0.5
+                        setTilt({ rx: -py * 16, ry: px * 16 })
+                      }
+                    : undefined
+                }
+                onMouseLeave={isCenter ? () => setTilt({ rx: 0, ry: 0 }) : undefined}
                 style={{
                   position: 'absolute',
                   aspectRatio: '0.6 / 1',
@@ -255,17 +274,29 @@ export default function Hero() {
                   ...styleForRole(role),
                 }}
               >
-                <img
-                  src={item.src}
-                  alt=""
-                  draggable={false}
+                {/* Float wrapper: gentle continuous bob */}
+                <div
                   style={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'contain',
-                    objectPosition: 'bottom center',
+                    animation: `th-float ${4 + index * 0.6}s ease-in-out infinite`,
+                    willChange: 'transform',
                   }}
-                />
+                >
+                  <img
+                    src={item.src}
+                    alt=""
+                    draggable={false}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      objectPosition: 'bottom center',
+                      transform: `scale(${baseScale})${tiltStr}`,
+                      transition: 'transform 200ms ease',
+                    }}
+                  />
+                </div>
               </div>
             )
           })}
@@ -335,21 +366,51 @@ export default function Hero() {
 }
 
 // Per-slide backgrounds:
-//  0 -> aurora gradient (the uploaded blue image, reproduced with CSS)
+//  0 -> aurora gradient (reproduced with CSS)
 //  1 -> solid #0F0D13
-//  2 -> the same aurora, with a subtle animated "liquid" drift
-//  3 -> solid #0F0D13 (kept dark to alternate with the aurora slides)
+//  2 -> blue light arcs (uploaded image 1, recreated in CSS)
+//  3 -> blue plasma capsule (uploaded image 2, recreated in CSS, animated)
 function renderBackground(index: number) {
   switch (index) {
     case 0:
       return <AuroraBackground />
     case 2:
-      return <AuroraBackground animated />
-    case 1:
+      return <ArcsBackground />
     case 3:
+      return <PlasmaBackground />
+    case 1:
     default:
       return <div className="absolute inset-0" style={{ backgroundColor: '#0F0D13' }} />
   }
+}
+
+// Image 1 — concentric blue light arcs sweeping across a black field. Built
+// from large discs positioned above the frame so only their glowing lower edge
+// shows, plus a soft central glow.
+function ArcsBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#020308' }}>
+      <div className="th-arc-glow" />
+      <div className="th-arc th-arc-1" />
+      <div className="th-arc th-arc-2" />
+      <div className="th-arc th-arc-3" />
+    </div>
+  )
+}
+
+// Image 2 — a glowing blue plasma capsule on black, drifting/rotating slowly.
+function PlasmaBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#010207' }}>
+      <div className="th-plasma-aura" />
+      <div className="th-plasma-spin">
+        <div className="th-plasma-body" />
+        <div className="th-plasma-ring th-plasma-ring-a" />
+        <div className="th-plasma-ring th-plasma-ring-b" />
+        <div className="th-plasma-core" />
+      </div>
+    </div>
+  )
 }
 
 // Reproduces the dark navy-to-black image with a bright blue glow top-right
