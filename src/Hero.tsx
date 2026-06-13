@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ArrowRight, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import PolygonSection from './PolygonSection'
 import SuteraSection from './SuteraSection'
 
@@ -292,13 +292,18 @@ export default function Hero() {
         {/* 2. Giant ghost text / logo (per-slide headline) */}
         <div
           className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none px-4"
-          style={{ zIndex: 2, top: '18%' }}
+          // Section 3 ("Every part of your business.") sits 40% lower.
+          style={{ zIndex: 2, top: activeIndex === 2 ? '58%' : '18%' }}
         >
           <span
             key={activeIndex}
             style={{
               fontFamily: "'Haffer XH', sans-serif",
-              fontSize: 'clamp(44px, 11.5vw, 200px)',
+              // Section 3's headline is 40% smaller than the other slides.
+              fontSize:
+                activeIndex === 2
+                  ? 'clamp(26px, 6.9vw, 120px)'
+                  : 'clamp(44px, 11.5vw, 200px)',
               fontWeight: 900,
               color: '#ffffff',
               opacity: 1,
@@ -432,26 +437,13 @@ export default function Hero() {
           })}
         </div>
 
-        {/* 5. Bottom-left text + scroll hint */}
+        {/* 5. Centered scroll hint */}
         <div
-          className="absolute bottom-6 left-4 sm:bottom-20 sm:left-24"
-          style={{ zIndex: 60, maxWidth: 320 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 sm:bottom-12"
+          style={{ zIndex: 60 }}
         >
-          <p
-            className="font-bold uppercase tracking-widest mb-2 sm:mb-3 text-base sm:text-[22px]"
-            style={{ color: '#ffffff', opacity: 0.95, letterSpacing: '0.02em' }}
-          >
-LUMENTRACK
-          </p>
-          <p
-            className="hidden sm:block text-xs sm:text-sm mb-4 sm:mb-5"
-            style={{ color: '#ffffff', opacity: 0.85, lineHeight: 1.6 }}
-          >
-            The artwork is stunning, shipped fully prepared. The finish is a vision,
-            the 3D craft is flawless. Many thanks! Wishing you the win. Order now.
-          </p>
           <div
-            className="flex items-center gap-2 uppercase text-xs font-semibold select-none"
+            className="flex flex-col items-center gap-2 uppercase text-xs font-semibold select-none"
             style={{ color: '#ffffff', opacity: 0.9, letterSpacing: '0.18em' }}
           >
             Scroll
@@ -461,34 +453,6 @@ LUMENTRACK
               style={{ animation: 'toonhub-bounce 1.6s ease-in-out infinite' }}
             />
           </div>
-        </div>
-
-        {/* 6. Bottom-right link */}
-        <div
-          className="absolute bottom-6 right-4 sm:bottom-20 sm:right-10"
-          style={{ zIndex: 60 }}
-        >
-          <a
-            href="#"
-            className="flex items-center"
-            style={{
-              fontFamily: "'Haffer XH', sans-serif",
-              fontSize: 'clamp(20px, 4vw, 56px)',
-              fontWeight: 400,
-              color: '#ffffff',
-              opacity: 0.95,
-              letterSpacing: '-0.02em',
-              lineHeight: 1,
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              transition: 'opacity 200ms',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.95')}
-          >
-            DISCOVER IT
-            <ArrowRight className="w-5 h-5 sm:w-8 sm:h-8" strokeWidth={2.25} />
-          </a>
         </div>
 
         {/* Slide 1 = the SUTÉRA section (covers the TOONHUB chrome) */}

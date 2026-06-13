@@ -6,6 +6,9 @@ const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 const DOME_WEBM = import.meta.env.BASE_URL + 'island.webm'
 const DOME_MP4 = import.meta.env.BASE_URL + 'island.mp4'
 const DOME_POSTER = import.meta.env.BASE_URL + 'island-poster.jpg'
+// Slow the clip to half speed. The source loop is 6.04s, so the slowed loop is
+// ~12.08s — the value the background-cast CSS animation is tuned to.
+const DOME_RATE = 0.5
 
 const THREADS = [
   { n: '01.', tag: '(XR/MR/VR)', label: 'PERCEPTUAL INTERFACES' },
@@ -36,9 +39,17 @@ function useLocalTime() {
 export default function SuteraSection() {
   const time = useLocalTime()
   const rootRef = useRef<HTMLDivElement>(null)
+  const vidRef = useRef<HTMLVideoElement>(null)
   const [par, setPar] = useState({ x: 0, y: 0 })
   // Whether the dome video can play (otherwise show the CSS placeholder).
   const [videoReady, setVideoReady] = useState(false)
+
+  // Play the dome clip at half speed for a calmer, dreamier loop. The
+  // background cast animation (CSS) runs at the matching slowed loop length so
+  // the colour shifts stay in sync with the footage.
+  const slowDown = () => {
+    if (vidRef.current) vidRef.current.playbackRate = DOME_RATE
+  }
 
   // Subtle cursor-driven parallax for the island and markers.
   useEffect(() => {
@@ -58,6 +69,9 @@ export default function SuteraSection() {
     <section ref={rootRef} className="su-root">
       <div className="su-grid" />
       <div className="su-glow" />
+      {/* Warm light the dome casts onto the scene; pulses in sync with the
+          slowed video loop so the background shifts colour at the same rhythm. */}
+      <div className="su-dome-cast" />
 
       {/* Top bar */}
       <img className="su-brand-logo" src={LOGO_SRC} alt="Lumentrack" draggable={false} />
@@ -82,6 +96,7 @@ export default function SuteraSection() {
       >
         <div className="su-dome">
           <video
+            ref={vidRef}
             className="su-dome-vid"
             autoPlay
             muted
@@ -90,7 +105,11 @@ export default function SuteraSection() {
             preload="auto"
             poster={DOME_POSTER}
             aria-hidden="true"
-            onCanPlay={() => setVideoReady(true)}
+            onLoadedMetadata={slowDown}
+            onCanPlay={() => {
+              slowDown()
+              setVideoReady(true)
+            }}
             onError={() => setVideoReady(false)}
           >
             <source src={DOME_WEBM} type="video/webm" />

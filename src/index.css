@@ -702,6 +702,8 @@ body,
   background: radial-gradient(circle, rgba(228, 156, 84, 0.20), transparent 62%);
   filter: blur(34px);
   pointer-events: none;
+  /* Same 12.08s loop as the dome cast so the whole slide breathes together. */
+  animation: su-dome-cast 12.08s ease-in-out infinite;
 }
 .su-grid {
   position: absolute;
@@ -781,6 +783,36 @@ body,
 /* Respect users who prefer reduced motion: hold the poster, no float. */
 @media (prefers-reduced-motion: reduce) {
   .su-dome { animation: none; }
+}
+
+/* Warm light cast around the dome. The colour/intensity cycles over one
+   slowed video loop (6.04s / 0.5 = 12.08s) so the background shifts in time
+   with the footage. */
+.su-dome-cast {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 880px;
+  max-height: 880px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1 !important;
+  background: radial-gradient(circle, rgba(224, 158, 86, 0.30), rgba(150, 90, 50, 0.10) 45%, transparent 70%);
+  filter: blur(40px);
+  animation: su-dome-cast 12.08s ease-in-out infinite;
+}
+@keyframes su-dome-cast {
+  /* night-blue dusk -> warm amber peak -> deep sunset -> back, matching the
+     light swell of the looping clip */
+  0%   { opacity: 0.55; filter: blur(40px) hue-rotate(-12deg); }
+  35%  { opacity: 1;    filter: blur(40px) hue-rotate(4deg); }
+  70%  { opacity: 0.75; filter: blur(40px) hue-rotate(-20deg); }
+  100% { opacity: 0.55; filter: blur(40px) hue-rotate(-12deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .su-dome-cast { animation: none; opacity: 0.8; }
 }
 .su-island {
   position: absolute;
