@@ -33,7 +33,7 @@ const ZOOM_MAX = 3
 // on scroll before advancing to the next section.
 const S3_MAX = 1
 const S3_BASE_TOP = 38 // %
-const S3_STEP = 10 // % per scroll step
+const S3_STEP = 15 // % per scroll step
 
 const GRAIN_SVG =
   "data:image/svg+xml," +
