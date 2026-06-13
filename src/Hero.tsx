@@ -22,6 +22,10 @@ const TITLES = ['', 'One platform.', 'Every part of your business.', '']
 
 const EASE = 'cubic-bezier(0.4,0,0.2,1)'
 
+// Section 2 mockup: number of scroll steps that zoom it in before the next
+// scroll advances to the following section.
+const ZOOM_MAX = 3
+
 const GRAIN_SVG =
   "data:image/svg+xml," +
   encodeURIComponent(
@@ -42,7 +46,14 @@ export default function Hero() {
   )
   // Cursor-driven tilt for the centered character
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
+  // Section 2 mockup zoom level (0..ZOOM_MAX)
+  const [zoom, setZoom] = useState(0)
   const isAnimating = useRef(false)
+  // Refs mirror state so the scroll handler always reads current values.
+  const activeRef = useRef(0)
+  const zoomRef = useRef(0)
+  activeRef.current = activeIndex
+  zoomRef.current = zoom
 
   // Preload all images on mount
   useEffect(() => {
@@ -59,25 +70,57 @@ export default function Hero() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  const navigate = useCallback((direction: 'next' | 'prev') => {
-    if (isAnimating.current) return
+  // Move to the previous/next section. Entering section 2 starts zoomed out
+  // when arriving from above, or fully zoomed in when arriving from below.
+  const go = useCallback((direction: 'next' | 'prev') => {
     isAnimating.current = true
-    setActiveIndex((prev) =>
-      direction === 'next' ? (prev + 1) % 4 : (prev + 3) % 4,
-    )
+    setActiveIndex((prev) => {
+      const next = direction === 'next' ? (prev + 1) % 4 : (prev + 3) % 4
+      activeRef.current = next
+      const z = next === 1 ? (direction === 'next' ? 0 : ZOOM_MAX) : 0
+      zoomRef.current = z
+      setZoom(z)
+      return next
+    })
     window.setTimeout(() => {
       isAnimating.current = false
     }, 650)
   }, [])
 
-  // Advance the carousel with the scroll wheel / trackpad (down = next, up =
-  // prev) and with vertical swipes on touch devices. The 650ms animation lock
-  // inside `navigate` throttles rapid wheel/swipe events to one step at a time.
+  // On section 2 the scroll first zooms the mockup through ZOOM_MAX steps
+  // (down grows it, up shrinks it); only past the limit does it change section.
+  const handleScroll = useCallback(
+    (dir: 'down' | 'up') => {
+      if (isAnimating.current) return
+      const ai = activeRef.current
+      const z = zoomRef.current
+      if (ai === 1) {
+        if (dir === 'down' && z < ZOOM_MAX) {
+          isAnimating.current = true
+          zoomRef.current = z + 1
+          setZoom(z + 1)
+          window.setTimeout(() => (isAnimating.current = false), 420)
+          return
+        }
+        if (dir === 'up' && z > 0) {
+          isAnimating.current = true
+          zoomRef.current = z - 1
+          setZoom(z - 1)
+          window.setTimeout(() => (isAnimating.current = false), 420)
+          return
+        }
+      }
+      go(dir === 'down' ? 'next' : 'prev')
+    },
+    [go],
+  )
+
+  // Drive sections with the scroll wheel / trackpad and vertical swipes.
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) < 8) return
       e.preventDefault()
-      navigate(e.deltaY > 0 ? 'next' : 'prev')
+      handleScroll(e.deltaY > 0 ? 'down' : 'up')
     }
 
     let touchStartY = 0
@@ -88,7 +131,7 @@ export default function Hero() {
       const delta = touchStartY - e.touches[0].clientY
       if (Math.abs(delta) < 40) return
       e.preventDefault()
-      navigate(delta > 0 ? 'next' : 'prev')
+      handleScroll(delta > 0 ? 'down' : 'up')
       touchStartY = e.touches[0].clientY
     }
 
@@ -100,7 +143,7 @@ export default function Hero() {
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
     }
-  }, [navigate])
+  }, [handleScroll])
 
   const center = activeIndex
   const left = (activeIndex + 3) % 4
@@ -273,19 +316,27 @@ export default function Hero() {
                   }}
                 >
                   <div key={`rise-${activeIndex === 1}`} className="th-laptop-rise">
-                    <div className="th-laptop-glow" />
-                    <img
-                      src={item.src}
-                      alt=""
-                      draggable={false}
+                    <div
                       style={{
-                        position: 'relative',
-                        zIndex: 1,
-                        display: 'block',
-                        width: '100%',
-                        height: 'auto',
+                        transform: `scale(${1 + zoom * 0.34})`,
+                        transformOrigin: 'center 40%',
+                        transition: `transform 500ms ${EASE}`,
                       }}
-                    />
+                    >
+                      <div className="th-laptop-glow" />
+                      <img
+                        src={item.src}
+                        alt=""
+                        draggable={false}
+                        style={{
+                          position: 'relative',
+                          zIndex: 1,
+                          display: 'block',
+                          width: '100%',
+                          height: 'auto',
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               )
