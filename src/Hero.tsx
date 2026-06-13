@@ -305,7 +305,7 @@ export default function Hero() {
             <span
               key={activeIndex}
               style={{
-                fontFamily: 'Anton, sans-serif',
+                fontFamily: "'Haffer XH', sans-serif",
                 fontSize: 'clamp(44px, 11.5vw, 200px)',
                 fontWeight: 900,
                 color: '#ffffff',
@@ -479,7 +479,7 @@ export default function Hero() {
             href="#"
             className="flex items-center"
             style={{
-              fontFamily: 'Anton, sans-serif',
+              fontFamily: "'Haffer XH', sans-serif",
               fontSize: 'clamp(20px, 4vw, 56px)',
               fontWeight: 400,
               color: '#ffffff',
