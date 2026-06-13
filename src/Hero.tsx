@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 
-// Slide 1's character is a local image uploaded to /public. Using a runtime
-// path (not an import) so the build succeeds even before the file is added.
+// Local character images uploaded to /public. Using runtime paths (not
+// imports) so the build succeeds even before the files are added.
 const SOLAR_SRC = import.meta.env.BASE_URL + 'solar-panel.png'
+const CHAR2_SRC = import.meta.env.BASE_URL + 'character-2.png'
 
 // Slide 1's headline is the LUMENTRACK wordmark (SVG in /public).
 const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 
 const IMAGES = [
   { src: SOLAR_SRC, bg: '#F4845F', panel: '#F79B7F' },
-  { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/2.b977faab.png', bg: '#6BBF7A', panel: '#85CC92' },
+  { src: CHAR2_SRC, bg: '#6BBF7A', panel: '#85CC92' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png', bg: '#E882B4', panel: '#ED9DC4' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/4.4457fbce.png', bg: '#6EB5FF', panel: '#8DC4FF' },
 ]
