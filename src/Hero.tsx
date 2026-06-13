@@ -248,6 +248,42 @@ export default function Hero() {
           {IMAGES.map((item, index) => {
             const role = roleFor(index)
             const isCenter = role === 'center'
+
+            // Special treatment for slide 2's laptop mockup when centered:
+            // sits ~50px below the headline, is cut off at the bottom of the
+            // hero, rises from below while growing, with a moving blue light.
+            if (isCenter && index === 1) {
+              return (
+                <div
+                  key={item.src}
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    top: isMobile ? '42%' : '38%',
+                    width: isMobile ? '98vw' : 'min(82vw, 1180px)',
+                    zIndex: 20,
+                  }}
+                >
+                  <div key={`rise-${activeIndex === 1}`} className="th-laptop-rise">
+                    <div className="th-laptop-glow" />
+                    <img
+                      src={item.src}
+                      alt=""
+                      draggable={false}
+                      style={{
+                        position: 'relative',
+                        zIndex: 1,
+                        display: 'block',
+                        width: '100%',
+                        height: 'auto',
+                      }}
+                    />
+                  </div>
+                </div>
+              )
+            }
+
             // Slide 1's character (index 0) is rendered 20% smaller.
             const baseScale = index === 0 ? 0.8 : 1
             const tiltStr = isCenter
