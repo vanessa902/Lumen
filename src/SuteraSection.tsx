@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Zap } from 'lucide-react'
 
 const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 // Centerpiece video (city-in-a-dome). WebM first for Chrome/Firefox, MP4
@@ -126,18 +125,6 @@ export default function SuteraSection() {
         <div className="su-elbow su-elbow-tr" />
       </div>
 
-      <div className="su-call su-call-left su-move">
-        <p>
-          FROM DEEP ROOTS,
-          <br />
-          CREATIVITY DRAWS ITS
-          <br />
-          STRENGTH
-        </p>
-        <div className="su-elbow su-elbow-left" />
-        <span className="su-marker" />
-      </div>
-
       <div className="su-call su-call-bottom su-move">
         <p>
           Connect Lumentrack
@@ -147,17 +134,6 @@ export default function SuteraSection() {
           Already Use
         </p>
         <div className="su-elbow su-elbow-bottom" />
-      </div>
-
-      {/* Right data panel */}
-      <div className="su-panel su-meta su-move">
-        <div className="su-meta-head">
-          <span>LUMENTRACK</span>
-          <span className="su-dim">/25</span>
-        </div>
-        <p className="su-dim">ONE OPERATING SYSTEM</p>
-        <p className="su-dim">FOR YOUR WHOLE TEAM</p>
-        <p className="su-meta-res">→ ACCESS OUR SOFTWARE</p>
       </div>
 
       {/* Bottom-left — product pillars */}
@@ -181,10 +157,7 @@ export default function SuteraSection() {
       {/* Bottom-right — bio panel */}
       <div className="su-panel su-bio">
         <div className="su-bio-head">
-          <span className="su-bio-brand">
-            <Zap size={13} strokeWidth={2.25} className="su-bio-bolt" />
-            LUMENTRACK
-          </span>
+          <img className="su-bio-logo" src={LOGO_SRC} alt="Lumentrack" draggable={false} />
         </div>
         <p>
           Stop jumping between 10 different tools. Lumentrack unifies CRM,
@@ -196,7 +169,7 @@ export default function SuteraSection() {
 
       <div className="su-socials">
         <button type="button">LINKEDIN</button>
-        <button type="button">Youtube</button>
+        <button type="button">YOUTUBE</button>
         <button type="button">INSTAGRAM</button>
       </div>
     </section>

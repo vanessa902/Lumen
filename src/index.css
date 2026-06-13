@@ -690,6 +690,8 @@ body,
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
   letter-spacing: 0.04em;
+  /* Every text on the first screen is uppercase. */
+  text-transform: uppercase;
 }
 .su-glow {
   position: absolute;
@@ -1099,18 +1101,11 @@ body,
   border-color: #7aa2ff;
 }
 
-/* Brand lockup in the bio panel header */
-.su-bio-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #fff;
-  letter-spacing: 0.18em;
-  font-weight: 600;
-}
-.su-bio-bolt {
-  color: #7aa2ff;
-  filter: drop-shadow(0 0 6px rgba(122, 162, 255, 0.7));
+/* Brand logo (SVG) in the bio panel header */
+.su-bio-logo {
+  height: 16px;
+  width: auto;
+  display: block;
 }
 
 /* Gentle floating "movement" on the annotation callouts and panels. Each
@@ -1122,9 +1117,7 @@ body,
 }
 .su-move { animation: su-drift 7s ease-in-out infinite; }
 .su-call-tr.su-move   { animation-duration: 6.5s; animation-delay: -0.4s; }
-.su-call-left.su-move { animation-duration: 7.8s; animation-delay: -1.2s; }
 .su-call-bottom.su-move { animation-duration: 7.2s; animation-delay: -2s; }
-.su-meta.su-move      { animation-duration: 8.4s; animation-delay: -0.8s; }
 /* The product pillars drift line by line. */
 .su-thread-list li {
   animation: su-drift 6.4s ease-in-out infinite;
