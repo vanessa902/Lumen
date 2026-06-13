@@ -411,3 +411,253 @@ body,
     animation-duration: 1ms;
   }
 }
+
+/* ===== Polygon-style section ===== */
+.poly-root {
+  position: relative;
+  min-height: 100%;
+  background: #04060d;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+.poly-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(120, 150, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 150, 255, 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  z-index: 0;
+}
+.poly-root > section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Block 1 — Get started */
+.poly-start {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8vh 6vw;
+  background:
+    radial-gradient(120% 90% at 50% 120%, rgba(37, 99, 235, 0.55), transparent 70%),
+    radial-gradient(80% 60% at 50% -10%, rgba(67, 56, 202, 0.4), transparent 70%);
+}
+.poly-start-title {
+  font-weight: 700;
+  font-size: clamp(40px, 7vw, 104px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.poly-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: center;
+  margin-top: 48px;
+}
+.poly-ang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 26px;
+  min-width: 210px;
+  justify-content: space-between;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+  transition: background-color 150ms, border-color 150ms;
+}
+.poly-ang-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+/* Block 2 — Powered by $POL */
+.poly-pol {
+  min-height: 92vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6vw;
+  align-items: center;
+  padding: 10vh 7vw;
+}
+.poly-pol-art {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 460px;
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 28% 26%, #7c3aed, transparent 38%),
+    radial-gradient(circle at 72% 60%, #2563eb, transparent 46%),
+    conic-gradient(from 210deg at 50% 50%, #1e1b4b, #4c1d95, #1d4ed8, #1e1b4b);
+  box-shadow: 0 0 80px rgba(80, 60, 220, 0.35);
+}
+.poly-tag {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+.poly-pol-title {
+  font-weight: 700;
+  font-size: clamp(34px, 5vw, 76px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 18px 0 18px;
+}
+.poly-pol-copy {
+  max-width: 440px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+.poly-stake {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 14px 24px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #6d28d9);
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: filter 150ms;
+}
+.poly-stake:hover {
+  filter: brightness(1.15);
+}
+
+/* Block 3 — list */
+.poly-list {
+  min-height: 100vh;
+  padding: 12vh 7vw 16vh;
+}
+.poly-list-tag {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.poly-rows {
+  margin-top: 8vh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 3vh, 36px);
+}
+.poly-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-height: clamp(70px, 12vh, 150px);
+}
+.poly-card {
+  position: relative;
+  flex: none;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.02);
+  clip-path: polygon(
+    16px 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%,
+    0 16px
+  );
+  transition: all 250ms;
+}
+.poly-card-n {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+}
+.poly-row.is-active .poly-card {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  box-shadow: 0 0 36px rgba(90, 70, 230, 0.6);
+}
+.poly-row-label {
+  font-weight: 700;
+  font-size: clamp(40px, 8vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.16);
+  transition: color 250ms;
+}
+.poly-row.is-active .poly-row-label {
+  color: #fff;
+}
+.poly-tip {
+  position: absolute;
+  left: clamp(120px, 16vw, 280px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 330px;
+  padding: 16px 18px;
+  background: rgba(10, 12, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  z-index: 3;
+  animation: th-fade 220ms ease;
+}
+.poly-tip-tag {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+.poly-tip p {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+}
+@media (max-width: 640px) {
+  .poly-pol {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .poly-tip {
+    position: static;
+    transform: none;
+    margin-top: 14px;
+    max-width: none;
+  }
+  .poly-row {
+    flex-wrap: wrap;
+  }
+}
