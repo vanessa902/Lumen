@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import IslandModel from './IslandModel'
 
 const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
+// Centerpiece video (city-in-a-dome). WebM first for Chrome/Firefox, MP4
+// fallback for Safari/iOS. Poster shows instantly while it buffers.
+const DOME_WEBM = import.meta.env.BASE_URL + 'island.webm'
+const DOME_MP4 = import.meta.env.BASE_URL + 'island.mp4'
+const DOME_POSTER = import.meta.env.BASE_URL + 'island-poster.jpg'
 
 const THREADS = [
   { n: '01.', tag: '(XR/MR/VR)', label: 'PERCEPTUAL INTERFACES' },
@@ -33,8 +37,8 @@ export default function SuteraSection() {
   const time = useLocalTime()
   const rootRef = useRef<HTMLDivElement>(null)
   const [par, setPar] = useState({ x: 0, y: 0 })
-  // Whether the 3D island GLB has loaded (otherwise show the CSS placeholder).
-  const [islandReady, setIslandReady] = useState(false)
+  // Whether the dome video can play (otherwise show the CSS placeholder).
+  const [videoReady, setVideoReady] = useState(false)
 
   // Subtle cursor-driven parallax for the island and markers.
   useEffect(() => {
@@ -69,27 +73,38 @@ export default function SuteraSection() {
         DEMO
       </h2>
 
-      {/* Center — 3D island (GLB) with CSS placeholder fallback */}
+      {/* Center — dome video with feathered edges + CSS placeholder fallback */}
       <div
         className="su-island-wrap"
         style={{
-          transform: `translate(calc(-50% + ${par.x * 18}px), ${par.y * 14}px)`,
+          transform: `translate(calc(-50% + ${par.x * 18}px), calc(-50% + ${par.y * 14}px))`,
         }}
       >
-        <div className="su-island-3d">
-          <IslandModel
-            onReady={() => setIslandReady(true)}
-            onError={() => setIslandReady(false)}
-          />
+        <div className="su-dome">
+          <video
+            className="su-dome-vid"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={DOME_POSTER}
+            aria-hidden="true"
+            onCanPlay={() => setVideoReady(true)}
+            onError={() => setVideoReady(false)}
+          >
+            <source src={DOME_WEBM} type="video/webm" />
+            <source src={DOME_MP4} type="video/mp4" />
+          </video>
         </div>
-        {!islandReady && (
+        {!videoReady && (
           <>
             <div className="su-island">
               <div className="su-island-moss" />
               <div className="su-island-scan" />
               <div className="su-island-flower" />
             </div>
-            <div className="su-island-tag">[ 3D ISLAND · TEMP ]</div>
+            <div className="su-island-tag">[ LOADING · DOME ]</div>
           </>
         )}
       </div>

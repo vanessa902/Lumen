@@ -677,8 +677,15 @@ body,
   height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(70% 60% at 78% 45%, rgba(40, 70, 160, 0.45), transparent 60%),
-    radial-gradient(120% 100% at 50% 0%, #0a1024, #050816 55%, #020617 100%);
+    /* warm sunset spill from the dome at the centre */
+    radial-gradient(40% 38% at 50% 47%, rgba(224, 158, 86, 0.26), transparent 72%),
+    /* warm bounce onto the "floor" below the dome */
+    radial-gradient(72% 58% at 50% 72%, rgba(150, 102, 56, 0.16), transparent 76%),
+    /* faint cool rim, top-right, keeps the blueprint UI cohesive */
+    radial-gradient(64% 56% at 84% 24%, rgba(40, 70, 160, 0.18), transparent 62%),
+    /* near-black base matched to the clip's surround so edges disappear */
+    radial-gradient(120% 100% at 50% 0%, #07091400, #05060e 50%, #02030a 100%),
+    #02030a;
   color: #aebfe6;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
@@ -691,8 +698,9 @@ body,
   width: 38vw;
   height: 38vw;
   transform: translateY(-50%);
-  background: radial-gradient(circle, rgba(122, 162, 255, 0.22), transparent 62%);
-  filter: blur(30px);
+  /* Warm glow echoing the dome's sunset (the sun sits to the right). */
+  background: radial-gradient(circle, rgba(228, 156, 84, 0.20), transparent 62%);
+  filter: blur(34px);
   pointer-events: none;
 }
 .su-grid {
@@ -742,21 +750,37 @@ body,
   color: #fff;
 }
 
-/* Island — 3D model + placeholder fallback */
+/* Dome video — centerpiece + placeholder fallback */
 .su-island-wrap {
   left: 50%;
   top: 50%;
-  width: 540px;
-  height: 460px;
-  margin-top: -30px;
+  width: 620px;
+  height: 440px;
   transform: translate(-50%, -50%);
   z-index: 1 !important;
   transition: transform 200ms ease-out;
 }
-.su-island-3d {
+/* The video, centered in the wrapper with feathered edges so the black
+   surround of the clip melts seamlessly into the slide background. */
+.su-dome {
   position: absolute;
   inset: 0;
   z-index: 1;
+  display: grid;
+  place-items: center;
+  animation: su-float 7s ease-in-out infinite;
+}
+.su-dome-vid {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Soft elliptical vignette feathers all four edges into the background. */
+  -webkit-mask-image: radial-gradient(ellipse 70% 74% at 50% 48%, #000 52%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 74% at 50% 48%, #000 52%, transparent 80%);
+}
+/* Respect users who prefer reduced motion: hold the poster, no float. */
+@media (prefers-reduced-motion: reduce) {
+  .su-dome { animation: none; }
 }
 .su-island {
   position: absolute;
