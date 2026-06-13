@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import IslandModel from './IslandModel'
+
+const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 
 const THREADS = [
   { n: '01.', tag: '(XR/MR/VR)', label: 'PERCEPTUAL INTERFACES' },
@@ -30,6 +33,8 @@ export default function SuteraSection() {
   const time = useLocalTime()
   const rootRef = useRef<HTMLDivElement>(null)
   const [par, setPar] = useState({ x: 0, y: 0 })
+  // Whether the 3D island GLB has loaded (otherwise show the CSS placeholder).
+  const [islandReady, setIslandReady] = useState(false)
 
   // Subtle cursor-driven parallax for the island and markers.
   useEffect(() => {
@@ -51,7 +56,7 @@ export default function SuteraSection() {
       <div className="su-glow" />
 
       {/* Top bar */}
-      <div className="su-brand">SUTÉRA</div>
+      <img className="su-brand-logo" src={LOGO_SRC} alt="Lumentrack" draggable={false} />
       <div className="su-time">
         <span className="su-dim">LOCAL TIME</span>
         <span>{time}</span>
@@ -59,24 +64,34 @@ export default function SuteraSection() {
 
       {/* Headline */}
       <h2 className="su-headline">
-        REALITY,
+        BOOK A
         <br />
-        BY DESIGN.
+        DEMO
       </h2>
 
-      {/* Center — temporary island placeholder */}
+      {/* Center — 3D island (GLB) with CSS placeholder fallback */}
       <div
         className="su-island-wrap"
         style={{
           transform: `translate(calc(-50% + ${par.x * 18}px), ${par.y * 14}px)`,
         }}
       >
-        <div className="su-island">
-          <div className="su-island-moss" />
-          <div className="su-island-scan" />
-          <div className="su-island-flower" />
+        <div className="su-island-3d">
+          <IslandModel
+            onReady={() => setIslandReady(true)}
+            onError={() => setIslandReady(false)}
+          />
         </div>
-        <div className="su-island-tag">[ 3D ISLAND · TEMP ]</div>
+        {!islandReady && (
+          <>
+            <div className="su-island">
+              <div className="su-island-moss" />
+              <div className="su-island-scan" />
+              <div className="su-island-flower" />
+            </div>
+            <div className="su-island-tag">[ 3D ISLAND · TEMP ]</div>
+          </>
+        )}
       </div>
 
       {/* Annotation callouts */}

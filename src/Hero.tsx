@@ -7,6 +7,8 @@ import SuteraSection from './SuteraSection'
 // imports) so the build succeeds even before the files are added.
 const SOLAR_SRC = import.meta.env.BASE_URL + 'solar-panel.png'
 const CHAR2_SRC = import.meta.env.BASE_URL + 'character-2.png'
+// Lumentrack wordmark shown top-left on every slide.
+const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 
 // Slide 1 = the SUTÉRA section (no carousel character). Slide 2 = laptop,
 // slide 3 = text only, slide 4 = solar panel.
@@ -314,13 +316,14 @@ export default function Hero() {
           </span>
         </div>
 
-        {/* 3. Top-left brand label */}
-        <div
-          className="absolute top-6 left-4 sm:left-8 text-xs font-semibold uppercase"
-          style={{ zIndex: 60, color: '#ffffff', opacity: 0.9, letterSpacing: '0.18em' }}
-        >
-          TOONHUB
-        </div>
+        {/* 3. Top-left Lumentrack logo */}
+        <img
+          src={LOGO_SRC}
+          alt="Lumentrack"
+          draggable={false}
+          className="absolute left-4 sm:left-10"
+          style={{ top: 30, height: 18, width: 'auto', zIndex: 60, opacity: 0.95 }}
+        />
 
         {/* 4. Carousel */}
         <div className="absolute inset-0" style={{ zIndex: 3 }}>
@@ -438,7 +441,7 @@ export default function Hero() {
             className="font-bold uppercase tracking-widest mb-2 sm:mb-3 text-base sm:text-[22px]"
             style={{ color: '#ffffff', opacity: 0.95, letterSpacing: '0.02em' }}
           >
-            TOONHUB FIGURINES
+LUMENTRACK
           </p>
           <p
             className="hidden sm:block text-xs sm:text-sm mb-4 sm:mb-5"
