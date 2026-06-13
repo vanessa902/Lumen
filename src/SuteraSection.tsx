@@ -22,7 +22,7 @@ const THREADS = [
   { n: '06.', label: 'Custom Permissions and Reporting' },
 ]
 
-export default function SuteraSection() {
+export default function SuteraSection({ domeScale = 1 }: { domeScale?: number }) {
   const rootRef = useRef<HTMLDivElement>(null)
   const vidRef = useRef<HTMLVideoElement>(null)
   const [par, setPar] = useState({ x: 0, y: 0 })
@@ -65,7 +65,7 @@ export default function SuteraSection() {
       <div
         className="su-island-wrap"
         style={{
-          transform: `translate(calc(-50% + ${par.x * 18}px), calc(-50% + ${par.y * 14}px))`,
+          transform: `translate(calc(-50% + ${par.x * 18}px), calc(-50% + ${par.y * 14}px)) scale(${domeScale})`,
         }}
       >
         <div className="su-dome">

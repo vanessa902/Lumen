@@ -35,6 +35,11 @@ const S3_MAX = 1
 const S3_BASE_TOP = 38 // %
 const S3_STEP = 15 // % per scroll step
 
+// Section 1 (SUTÉRA) grows the dome video through these scales on scroll
+// (+20%, then +15%, then +20%) before the next scroll advances.
+const DOME_SCALES = [1, 1.2, 1.38, 1.66]
+const DOME_MAX = DOME_SCALES.length - 1
+
 const GRAIN_SVG =
   "data:image/svg+xml," +
   encodeURIComponent(
@@ -59,6 +64,8 @@ export default function Hero() {
   const [zoom, setZoom] = useState(0)
   // Section 3 extra text-drop step (0..S3_MAX)
   const [s3, setS3] = useState(0)
+  // Section 1 dome video grow step (0..DOME_MAX)
+  const [dome, setDome] = useState(0)
   // 'hero' = the scroll-jacked carousel, 'polygon' = the section below it.
   const [phase, setPhase] = useState<'hero' | 'polygon'>('hero')
   // Drives the blur + fade-to-black overlay between phases.
@@ -68,10 +75,12 @@ export default function Hero() {
   const activeRef = useRef(0)
   const zoomRef = useRef(0)
   const s3Ref = useRef(0)
+  const domeRef = useRef(0)
   const phaseRef = useRef<'hero' | 'polygon'>('hero')
   activeRef.current = activeIndex
   zoomRef.current = zoom
   s3Ref.current = s3
+  domeRef.current = dome
   phaseRef.current = phase
 
   // Preload all images on mount
@@ -103,6 +112,10 @@ export default function Hero() {
       const s = next === 2 ? (direction === 'next' ? 0 : S3_MAX) : 0
       s3Ref.current = s
       setS3(s)
+      // Section 1 dome starts un-grown from above, fully grown from below.
+      const d = next === 0 ? (direction === 'next' ? 0 : DOME_MAX) : 0
+      domeRef.current = d
+      setDome(d)
       return next
     })
     window.setTimeout(() => {
@@ -131,6 +144,23 @@ export default function Hero() {
       if (isAnimating.current) return
       const ai = activeRef.current
       const z = zoomRef.current
+      if (ai === 0) {
+        const d = domeRef.current
+        if (dir === 'down' && d < DOME_MAX) {
+          isAnimating.current = true
+          domeRef.current = d + 1
+          setDome(d + 1)
+          window.setTimeout(() => (isAnimating.current = false), 320)
+          return
+        }
+        if (dir === 'up' && d > 0) {
+          isAnimating.current = true
+          domeRef.current = d - 1
+          setDome(d - 1)
+          window.setTimeout(() => (isAnimating.current = false), 320)
+          return
+        }
+      }
       if (ai === 1) {
         if (dir === 'down' && z < ZOOM_MAX) {
           isAnimating.current = true
@@ -502,7 +532,7 @@ export default function Hero() {
             transition: `opacity 650ms ${EASE}`,
           }}
         >
-          <SuteraSection />
+          <SuteraSection domeScale={DOME_SCALES[dome]} />
         </div>
       </div>
     </div>
