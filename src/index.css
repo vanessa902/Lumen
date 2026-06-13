@@ -25,3 +25,107 @@ body,
     transform: translateY(4px);
   }
 }
+
+/* --- Aurora background (reproduces the uploaded blue image) --- */
+.th-blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* Bright blue-white glow, upper-right corner */
+.th-blob-glow {
+  top: -15%;
+  right: -10%;
+  width: 60%;
+  height: 75%;
+  background: radial-gradient(
+    closest-side,
+    rgba(205, 218, 255, 0.95),
+    rgba(120, 140, 255, 0.55) 45%,
+    rgba(60, 80, 220, 0.18) 70%,
+    transparent 100%
+  );
+  filter: blur(40px);
+}
+
+/* Deep royal-blue mass, centre-right */
+.th-blob-royal {
+  top: 12%;
+  left: 42%;
+  width: 72%;
+  height: 82%;
+  background: radial-gradient(
+    closest-side,
+    rgba(40, 55, 205, 0.78),
+    rgba(25, 30, 150, 0.4) 50%,
+    transparent 80%
+  );
+  filter: blur(60px);
+}
+
+/* Faint diagonal light streak, lower-right */
+.th-blob-streak {
+  bottom: -12%;
+  right: -8%;
+  width: 52%;
+  height: 64%;
+  background: radial-gradient(
+    closest-side,
+    rgba(150, 170, 255, 0.35),
+    transparent 70%
+  );
+  filter: blur(50px);
+  transform: rotate(-30deg);
+}
+
+/* Liquid drift — applied only to the animated slide */
+.th-blob-glow.th-anim {
+  animation: th-drift-glow 14s ease-in-out infinite alternate;
+}
+.th-blob-royal.th-anim {
+  animation: th-drift-royal 18s ease-in-out infinite alternate;
+}
+.th-blob-streak.th-anim {
+  animation: th-drift-streak 16s ease-in-out infinite alternate;
+}
+
+@keyframes th-drift-glow {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-5%, 6%) scale(1.12);
+  }
+  100% {
+    transform: translate(4%, -3%) scale(1.05);
+  }
+}
+@keyframes th-drift-royal {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(6%, -4%) scale(1.15);
+  }
+  100% {
+    transform: translate(-4%, 5%) scale(1.08);
+  }
+}
+@keyframes th-drift-streak {
+  0% {
+    transform: rotate(-30deg) translate(0, 0) scale(1);
+  }
+  50% {
+    transform: rotate(-24deg) translate(-6%, -4%) scale(1.2);
+  }
+  100% {
+    transform: rotate(-34deg) translate(4%, 3%) scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .th-blob.th-anim {
+    animation: none;
+  }
+}

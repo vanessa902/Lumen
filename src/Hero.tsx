@@ -148,13 +148,28 @@ export default function Hero() {
   return (
     <div
       style={{
-        backgroundColor: IMAGES[activeIndex].bg,
-        transition: `background-color 650ms ${EASE}`,
+        backgroundColor: '#04050c',
         fontFamily: 'Inter, sans-serif',
       }}
       className="relative w-full overflow-hidden"
     >
       <div style={{ height: '100vh', overflow: 'hidden' }} className="relative w-full">
+        {/* 0. Per-slide background layers (crossfade) */}
+        <div className="absolute inset-0" style={{ zIndex: 0 }}>
+          {IMAGES.map((_, i) => (
+            <div
+              key={i}
+              className="absolute inset-0"
+              style={{
+                opacity: i === activeIndex ? 1 : 0,
+                transition: `opacity 650ms ${EASE}`,
+              }}
+            >
+              {renderBackground(i)}
+            </div>
+          ))}
+        </div>
+
         {/* 1. Grain overlay */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -287,6 +302,38 @@ export default function Hero() {
           </a>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Per-slide backgrounds:
+//  0 -> aurora gradient (the uploaded blue image, reproduced with CSS)
+//  1 -> solid #0F0D13
+//  2 -> the same aurora, with a subtle animated "liquid" drift
+//  3 -> solid #0F0D13 (kept dark to alternate with the aurora slides)
+function renderBackground(index: number) {
+  switch (index) {
+    case 0:
+      return <AuroraBackground />
+    case 2:
+      return <AuroraBackground animated />
+    case 1:
+    case 3:
+    default:
+      return <div className="absolute inset-0" style={{ backgroundColor: '#0F0D13' }} />
+  }
+}
+
+// Reproduces the dark navy-to-black image with a bright blue glow top-right
+// using soft radial "blobs". When `animated`, the blobs slowly drift/scale so
+// the gradient reads like liquid in motion.
+function AuroraBackground({ animated = false }: { animated?: boolean }) {
+  const a = animated ? ' th-anim' : ''
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#04050c' }}>
+      <div className={'th-blob th-blob-glow' + a} />
+      <div className={'th-blob th-blob-royal' + a} />
+      <div className={'th-blob th-blob-streak' + a} />
     </div>
   )
 }
