@@ -71,6 +71,11 @@ export default function Hero() {
   const zoomRef = useRef(0)
   const s3Ref = useRef(0)
   const domeRef = useRef(0)
+  // Gate scroll-jacking: only intercept the wheel while the Lumentrack hero
+  // fills the viewport; release at the ends so the page scrolls to the NHM
+  // sections above/below.
+  const heroRootRef = useRef<HTMLDivElement>(null)
+  const inViewRef = useRef(false)
   activeRef.current = activeIndex
   zoomRef.current = zoom
   s3Ref.current = s3
@@ -89,6 +94,26 @@ export default function Hero() {
     const onResize = () => setIsMobile(window.innerWidth < 640)
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  // Activate scroll-jacking only when the hero is (almost) fully in view; snap
+  // it to fill the viewport on entry so the carousel never sits half-scrolled.
+  useEffect(() => {
+    const el = heroRootRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        const ratio = entries[0].intersectionRatio
+        const nowIn = ratio >= 0.9
+        if (nowIn && !inViewRef.current) {
+          el.scrollIntoView({ block: 'start' })
+        }
+        inViewRef.current = nowIn
+      },
+      { threshold: [0, 0.5, 0.9, 1] },
+    )
+    io.observe(el)
+    return () => io.disconnect()
   }, [])
 
   // Move to the previous/next section. Entering section 2 starts zoomed out
@@ -185,10 +210,21 @@ export default function Hero() {
 
   // Drive sections with the scroll wheel / trackpad and vertical swipes.
   useEffect(() => {
+    // Release scroll at the carousel's ends so the page scrolls to the
+    // neighbouring NHM sections instead of being trapped.
+    const atEndBoundary = (down: boolean) => {
+      const ai = activeRef.current
+      if (down) return ai === 3 // last slide -> let the page continue down
+      return ai === 0 && domeRef.current === 0 // first slide -> continue up
+    }
+
     const onWheel = (e: WheelEvent) => {
+      if (!inViewRef.current) return
       if (Math.abs(e.deltaY) < 8) return
+      const down = e.deltaY > 0
+      if (atEndBoundary(down)) return
       e.preventDefault()
-      handleHeroScroll(e.deltaY > 0 ? 'down' : 'up')
+      handleHeroScroll(down ? 'down' : 'up')
     }
 
     let touchStartY = 0
@@ -196,10 +232,13 @@ export default function Hero() {
       touchStartY = e.touches[0].clientY
     }
     const onTouchMove = (e: TouchEvent) => {
+      if (!inViewRef.current) return
       const delta = touchStartY - e.touches[0].clientY
       if (Math.abs(delta) < 40) return
+      const down = delta > 0
+      if (atEndBoundary(down)) return
       e.preventDefault()
-      handleHeroScroll(delta > 0 ? 'down' : 'up')
+      handleHeroScroll(down ? 'down' : 'up')
       touchStartY = e.touches[0].clientY
     }
 
@@ -273,6 +312,7 @@ export default function Hero() {
   return (
     <>
     <div
+      ref={heroRootRef}
       style={{
         backgroundColor: '#04050c',
         fontFamily: 'Inter, sans-serif',
