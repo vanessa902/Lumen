@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronDown } from 'lucide-react'
-import SuteraSection from './SuteraSection'
 
 // Local character images uploaded to /public. Using runtime paths (not
 // imports) so the build succeeds even before the files are added.
@@ -9,35 +8,29 @@ const CHAR2_SRC = import.meta.env.BASE_URL + 'character-2.png'
 // Lumentrack wordmark shown top-left on every slide.
 const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 
-// Slide 1 = the SUTÉRA section (no carousel character). Slide 2 = laptop,
-// slide 3 = text only, slide 4 = solar panel.
+// Carousel slides: 0 = laptop mockup ("One platform."), 1 = text only
+// ("Every part of your business."), 2 = solar panel.
 const IMAGES = [
-  { src: SOLAR_SRC, bg: '#04060d', panel: '#04060d' },
   { src: CHAR2_SRC, bg: '#6BBF7A', panel: '#85CC92' },
   { src: 'https://fifth-gentle-45902158.figma.site/_components/v2/4de492f6d9cf8244ad5293233e5c6f52407d42fc/3.4df853b4.png', bg: '#E882B4', panel: '#ED9DC4' },
   { src: SOLAR_SRC, bg: '#6EB5FF', panel: '#8DC4FF' },
 ]
+const SLIDES = IMAGES.length
 
-// Giant background headline per slide. Slide 1 is the SUTÉRA section, slide 4
-// shows the solar panel — both without a headline.
-const TITLES = ['', 'One platform.', 'Every part of your business.', '']
+// Giant background headline per slide. The solar panel (last) has no headline.
+const TITLES = ['One platform.', 'Every part of your business.', '']
 
 const EASE = 'cubic-bezier(0.4,0,0.2,1)'
 
-// Section 2 mockup: number of scroll steps that zoom it in before the next
+// Slide 0 mockup: number of scroll steps that zoom it in before the next
 // scroll advances to the following section.
 const ZOOM_MAX = 3
 
-// Section 3 ("Every part of your business.") drops its text one extra 10% step
+// Slide 1 ("Every part of your business.") drops its text one extra 15% step
 // on scroll before advancing to the next section.
 const S3_MAX = 1
 const S3_BASE_TOP = 38 // %
 const S3_STEP = 15 // % per scroll step
-
-// Section 1 (SUTÉRA) grows the dome video through these scales on scroll
-// (+20%, then +15%, then +20%) before the next scroll advances.
-const DOME_SCALES = [1, 1.2, 1.38, 1.66]
-const DOME_MAX = DOME_SCALES.length - 1
 
 const GRAIN_SVG =
   "data:image/svg+xml," +
@@ -61,16 +54,13 @@ export default function Hero() {
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
   // Section 2 mockup zoom level (0..ZOOM_MAX)
   const [zoom, setZoom] = useState(0)
-  // Section 3 extra text-drop step (0..S3_MAX)
+  // Slide 1 extra text-drop step (0..S3_MAX)
   const [s3, setS3] = useState(0)
-  // Section 1 dome video grow step (0..DOME_MAX)
-  const [dome, setDome] = useState(0)
   const isAnimating = useRef(false)
   // Refs mirror state so the scroll handler always reads current values.
   const activeRef = useRef(0)
   const zoomRef = useRef(0)
   const s3Ref = useRef(0)
-  const domeRef = useRef(0)
   // Gate scroll-jacking: only intercept the wheel while the Lumentrack hero
   // fills the viewport; release at the ends so the page scrolls to the NHM
   // sections above/below.
@@ -79,7 +69,6 @@ export default function Hero() {
   activeRef.current = activeIndex
   zoomRef.current = zoom
   s3Ref.current = s3
-  domeRef.current = dome
 
   // Preload all images on mount
   useEffect(() => {
@@ -121,19 +110,16 @@ export default function Hero() {
   const go = useCallback((direction: 'next' | 'prev') => {
     isAnimating.current = true
     setActiveIndex((prev) => {
-      const next = direction === 'next' ? (prev + 1) % 4 : (prev + 3) % 4
+      const next = direction === 'next' ? (prev + 1) % SLIDES : (prev + SLIDES - 1) % SLIDES
       activeRef.current = next
-      const z = next === 1 ? (direction === 'next' ? 0 : ZOOM_MAX) : 0
+      // Slide 0 mockup starts zoomed out from above, fully zoomed in from below.
+      const z = next === 0 ? (direction === 'next' ? 0 : ZOOM_MAX) : 0
       zoomRef.current = z
       setZoom(z)
-      // Section 3 starts un-dropped from above, fully dropped from below.
-      const s = next === 2 ? (direction === 'next' ? 0 : S3_MAX) : 0
+      // Slide 1 starts un-dropped from above, fully dropped from below.
+      const s = next === 1 ? (direction === 'next' ? 0 : S3_MAX) : 0
       s3Ref.current = s
       setS3(s)
-      // Section 1 dome starts un-grown from above, fully grown from below.
-      const d = next === 0 ? (direction === 'next' ? 0 : DOME_MAX) : 0
-      domeRef.current = d
-      setDome(d)
       return next
     })
     window.setTimeout(() => {
@@ -149,23 +135,6 @@ export default function Hero() {
       const ai = activeRef.current
       const z = zoomRef.current
       if (ai === 0) {
-        const d = domeRef.current
-        if (dir === 'down' && d < DOME_MAX) {
-          isAnimating.current = true
-          domeRef.current = d + 1
-          setDome(d + 1)
-          window.setTimeout(() => (isAnimating.current = false), 320)
-          return
-        }
-        if (dir === 'up' && d > 0) {
-          isAnimating.current = true
-          domeRef.current = d - 1
-          setDome(d - 1)
-          window.setTimeout(() => (isAnimating.current = false), 320)
-          return
-        }
-      }
-      if (ai === 1) {
         if (dir === 'down' && z < ZOOM_MAX) {
           isAnimating.current = true
           zoomRef.current = z + 1
@@ -181,7 +150,7 @@ export default function Hero() {
           return
         }
       }
-      if (ai === 2) {
+      if (ai === 1) {
         const s = s3Ref.current
         if (dir === 'down' && s < S3_MAX) {
           isAnimating.current = true
@@ -199,8 +168,8 @@ export default function Hero() {
         }
       }
       if (dir === 'down') {
-        if (ai < 3) go('next')
-        // ai === 3 is the last section; nothing follows it.
+        if (ai < SLIDES - 1) go('next')
+        // last slide; nothing follows it.
       } else if (ai > 0) {
         go('prev')
       }
@@ -214,8 +183,8 @@ export default function Hero() {
     // neighbouring NHM sections instead of being trapped.
     const atEndBoundary = (down: boolean) => {
       const ai = activeRef.current
-      if (down) return ai === 3 // last slide -> let the page continue down
-      return ai === 0 && domeRef.current === 0 // first slide -> continue up
+      if (down) return ai === SLIDES - 1 // last slide -> let the page continue down
+      return ai === 0 && zoomRef.current === 0 // first slide -> continue up
     }
 
     const onWheel = (e: WheelEvent) => {
@@ -253,9 +222,9 @@ export default function Hero() {
   }, [handleHeroScroll])
 
   const center = activeIndex
-  const left = (activeIndex + 3) % 4
-  const right = (activeIndex + 1) % 4
-  // back = (activeIndex + 2) % 4 — any index that is not center/left/right
+  const left = (activeIndex + SLIDES - 1) % SLIDES
+  const right = (activeIndex + 1) % SLIDES
+  // Only the centre slide renders; left/right just classify the others.
 
   const roleFor = (index: number): Role => {
     if (index === center) return 'center'
@@ -354,11 +323,11 @@ export default function Hero() {
         {/* 2. Giant ghost text / logo (per-slide headline) */}
         <div
           className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none px-4"
-          // Section 3 ("Every part of your business.") starts below center and
-          // drops one extra 10% step on scroll.
+          // Slide 1 ("Every part of your business.") starts below center and
+          // drops one extra 15% step on scroll.
           style={{
             zIndex: 2,
-            top: activeIndex === 2 ? `${S3_BASE_TOP + s3 * S3_STEP}%` : '18%',
+            top: activeIndex === 1 ? `${S3_BASE_TOP + s3 * S3_STEP}%` : '18%',
             transition: `top 450ms ${EASE}`,
           }}
         >
@@ -366,9 +335,9 @@ export default function Hero() {
             key={activeIndex}
             style={{
               fontFamily: "'Haffer XH', sans-serif",
-              // Section 3's headline is 40% smaller than the other slides.
+              // Slide 1's headline is 40% smaller than the other slides.
               fontSize:
-                activeIndex === 2
+                activeIndex === 1
                   ? 'clamp(26px, 6.9vw, 120px)'
                   : 'clamp(44px, 11.5vw, 200px)',
               fontWeight: 900,
@@ -408,10 +377,10 @@ export default function Hero() {
             // just shows its own element.
             if (!isCenter) return null
 
-            // Special treatment for slide 2's laptop mockup: sits below the
+            // Special treatment for slide 0's laptop mockup: sits below the
             // headline, cropped at the hero's bottom edge, rising from below
             // while growing, with a moving blue light.
-            if (index === 1) {
+            if (index === 0) {
               return (
                 <div
                   key={item.src}
@@ -424,7 +393,7 @@ export default function Hero() {
                     zIndex: 20,
                   }}
                 >
-                  <div key={`rise-${activeIndex === 1}`} className="th-laptop-rise">
+                  <div key={`rise-${activeIndex === 0}`} className="th-laptop-rise">
                     <div
                       style={{
                         transform: `scale(${1 + zoom * 0.34})`,
@@ -451,9 +420,9 @@ export default function Hero() {
               )
             }
 
-            // Slide 1 is the SUTÉRA section and slide 3 is text only — neither
-            // renders a carousel character.
-            if (index === 0 || index === 2) return null
+            // Slide 1 ("Every part of your business.") is text only — no
+            // carousel character.
+            if (index === 1) return null
 
             // The solar panel is rendered 20% smaller.
             const baseScale = item.src === SOLAR_SRC ? 0.8 : 1
@@ -521,20 +490,6 @@ export default function Hero() {
             />
           </div>
         </div>
-
-        {/* Slide 1 = the SUTÉRA section (covers the TOONHUB chrome) */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 70,
-            opacity: activeIndex === 0 ? 1 : 0,
-            pointerEvents: activeIndex === 0 ? 'auto' : 'none',
-            transition: `opacity 650ms ${EASE}`,
-          }}
-        >
-          <SuteraSection domeScale={DOME_SCALES[dome]} />
-        </div>
       </div>
     </div>
 
@@ -543,19 +498,16 @@ export default function Hero() {
 }
 
 // Per-slide backgrounds:
-//  0 -> aurora gradient (reproduced with CSS)
-//  1 -> solid #0F0D13
-//  2 -> blue light arcs (uploaded image 1, recreated in CSS)
-//  3 -> blue plasma capsule (uploaded image 2, recreated in CSS, animated)
+//  0 -> solid #0F0D13 ("One platform." laptop)
+//  1 -> blue light arcs ("Every part of your business.")
+//  2 -> blue plasma capsule (solar panel, animated)
 function renderBackground(index: number) {
   switch (index) {
-    case 0:
-      return <AuroraBackground />
-    case 2:
-      return <ArcsBackground />
-    case 3:
-      return <PlasmaBackground />
     case 1:
+      return <ArcsBackground />
+    case 2:
+      return <PlasmaBackground />
+    case 0:
     default:
       return <div className="absolute inset-0" style={{ backgroundColor: '#0F0D13' }} />
   }
@@ -589,20 +541,6 @@ function PlasmaBackground() {
         <div className="th-plasma-ring th-plasma-ring-b" />
         <div className="th-plasma-core" />
       </div>
-    </div>
-  )
-}
-
-// Reproduces the dark navy-to-black image with a bright blue glow top-right
-// using soft radial "blobs". When `animated`, the blobs slowly drift/scale so
-// the gradient reads like liquid in motion.
-function AuroraBackground({ animated = false }: { animated?: boolean }) {
-  const a = animated ? ' th-anim' : ''
-  return (
-    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#04050c' }}>
-      <div className={'th-blob th-blob-glow' + a} />
-      <div className={'th-blob th-blob-royal' + a} />
-      <div className={'th-blob th-blob-streak' + a} />
     </div>
   )
 }
