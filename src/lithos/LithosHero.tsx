@@ -188,8 +188,9 @@ export default function LithosHero() {
           style={{ animationDelay: '0.85s' }}
         >
           <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
-            Our interactive maps let you peel back the crust to trace how stones, fossils, and deep
-            time combine to shape the ground beneath your feet.
+            Power Your Entire Operation
+            <br />
+            From a Single Platform
           </p>
           <button className="bg-[#e8702a] hover:bg-[#d2611f] text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-lg hover:shadow-[#e8702a]/30">
             Start Digging
