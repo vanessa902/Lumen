@@ -24,9 +24,6 @@ body,
   min-height: 100%;
 }
 /* The page is now a long vertical scroll (NHM hero -> Lumentrack -> NHM 2/3). */
-html {
-  scroll-behavior: smooth;
-}
 
 /* Gentle floating bob for the carousel characters */
 @keyframes th-float {
