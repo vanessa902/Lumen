@@ -176,8 +176,9 @@ export default function LithosHero() {
           style={{ animationDelay: '0.7s' }}
         >
           <p className="text-sm text-white/80 leading-relaxed">
-            Every layer of sediment records a chapter of our planet, from ancient seabeds to
-            drifting ash, layered across millions of years beneath us.
+            Stop jumping between 10 different tools. Lumentrack unifies CRM, proposal design,
+            production modeling, commissions, scheduling, and internal workflows into one simple
+            system that your entire team can use.
           </p>
         </div>
 
