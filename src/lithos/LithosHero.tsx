@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Menu, User } from 'lucide-react'
+import { Menu } from 'lucide-react'
 // Imported (not /public) so Vite fingerprints the filename and the browser
 // never serves a stale cached image after a swap.
 import BG_IMAGE_1 from './hero-base.jpg'
@@ -121,9 +121,8 @@ export default function LithosHero() {
           ))}
         </div>
 
-        <button className="hidden md:flex items-center gap-2 bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100">
-          <User size={16} strokeWidth={2} />
-          Sign up / Login
+        <button className="hidden md:block bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100">
+          Get Started
         </button>
         <button className="md:hidden text-white" aria-label="Open menu">
           <Menu size={26} />
