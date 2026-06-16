@@ -14,22 +14,36 @@ const pills = [
 const HEADING = 'The all-in-one operating system for contractors and service businesses.'
 
 export default function NhmExplore() {
-  // Typewriter: transcribe the heading once the section scrolls into view.
+  // Typewriter: starts when the section scrolls into view, then loops forever —
+  // types the full text, waits 5s, clears and replays.
   const headingRef = useRef<HTMLHeadingElement>(null)
   const inView = useInView(headingRef, { once: true, margin: '-80px' })
   const [count, setCount] = useState(0)
   useEffect(() => {
     if (!inView) return
-    const id = setInterval(() => {
-      setCount((c) => {
-        if (c >= HEADING.length) {
-          clearInterval(id)
-          return c
-        }
-        return c + 1
-      })
-    }, 32)
-    return () => clearInterval(id)
+    let i = 0
+    let cancelled = false
+    let timer: ReturnType<typeof setTimeout>
+    const tick = () => {
+      if (cancelled) return
+      if (i < HEADING.length) {
+        i += 1
+        setCount(i)
+        timer = setTimeout(tick, 32)
+      } else {
+        // Fully typed: hold 5s, then clear and replay.
+        timer = setTimeout(() => {
+          i = 0
+          setCount(0)
+          timer = setTimeout(tick, 500)
+        }, 5000)
+      }
+    }
+    tick()
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
   }, [inView])
 
   // 3D mouse parallax + glass reflection on the dashboard mockup.
