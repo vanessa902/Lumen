@@ -309,7 +309,7 @@ export default function Hero() {
     <div
       ref={heroRootRef}
       style={{
-        backgroundColor: '#04050c',
+        backgroundColor: '#0a0a0a',
         fontFamily: 'Inter, sans-serif',
       }}
       className="relative w-full overflow-hidden"
@@ -514,8 +514,9 @@ export default function Hero() {
   )
 }
 
-// Per-slide backgrounds:
-//  0 -> solid #0F0D13 ("One platform." laptop)
+// Per-slide backgrounds (all share the #0a0a0a base of the section above; only
+// the blue lights/gradients differ):
+//  0 -> plain black ("One platform." laptop, with its own blue glow)
 //  1 -> blue light arcs ("Every part of your business.")
 //  2 -> blue plasma capsule (solar panel, animated)
 function renderBackground(index: number) {
@@ -526,7 +527,7 @@ function renderBackground(index: number) {
       return <PlasmaBackground />
     case 0:
     default:
-      return <div className="absolute inset-0" style={{ backgroundColor: '#0F0D13' }} />
+      return <div className="absolute inset-0" style={{ backgroundColor: '#0a0a0a' }} />
   }
 }
 
@@ -535,7 +536,7 @@ function renderBackground(index: number) {
 // shows, plus a soft central glow.
 function ArcsBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#020308' }}>
+    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
       <div className="th-arc-glow" />
       <div className="th-arc th-arc-1" />
       <div className="th-arc th-arc-2" />
@@ -550,7 +551,7 @@ function ArcsBackground() {
 // Image 2 — a glowing blue plasma capsule on black, drifting/rotating slowly.
 function PlasmaBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#010207' }}>
+    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
       <div className="th-plasma-aura" />
       <div className="th-plasma-spin">
         <div className="th-plasma-body" />
