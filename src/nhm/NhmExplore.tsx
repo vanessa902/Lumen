@@ -26,8 +26,8 @@ export default function NhmExplore() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="text-[2.2rem] md:text-[3.5rem] lg:text-[4.2rem] leading-[1.1] font-medium tracking-tight text-[#111] text-center max-w-[1000px] px-6"
       >
-        Unearth the stories of our planet's past
-        <br className="hidden md:block" /> through fossils, minerals, and ancient wonders.
+        The all-in-one operating system for
+        <br className="hidden md:block" /> contractors and service businesses.
       </motion.h2>
 
       {/* 2C. Action pills */}
