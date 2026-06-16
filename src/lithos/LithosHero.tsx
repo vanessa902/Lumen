@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Menu } from 'lucide-react'
+import { Menu, User } from 'lucide-react'
 // Imported (not /public) so Vite fingerprints the filename and the browser
 // never serves a stale cached image after a swap.
 import BG_IMAGE_1 from './hero-base.jpg'
@@ -97,7 +97,7 @@ export default function LithosHero() {
     }
   }, [])
 
-  const navItems = ['Field Guides', 'Geology', 'Plans', 'Live Tour']
+  const navItems = ['Features', 'Integrations', 'About', 'Contact Us']
 
   return (
     <div className="min-h-screen bg-white tracking-[-0.02em]" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -109,7 +109,7 @@ export default function LithosHero() {
 
         <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-2 py-2 items-center gap-1">
           <button className="px-4 py-1.5 rounded-full text-sm font-medium text-white bg-white/20">
-            Course
+            Home
           </button>
           {navItems.map((item) => (
             <button
@@ -121,8 +121,9 @@ export default function LithosHero() {
           ))}
         </div>
 
-        <button className="hidden md:block bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100">
-          Sign Up
+        <button className="hidden md:flex items-center gap-2 bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100">
+          <User size={16} strokeWidth={2} />
+          Sign up / Login
         </button>
         <button className="md:hidden text-white" aria-label="Open menu">
           <Menu size={26} />
