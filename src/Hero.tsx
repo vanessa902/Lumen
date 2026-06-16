@@ -164,7 +164,9 @@ export default function Hero() {
 
   // Drive sections with the scroll wheel / trackpad and vertical swipes.
   // The hero stays pinned (static) while its carousel plays and only releases
-  // to the neighbouring NHM sections at the first/last slide.
+  // to the neighbouring sections at the first/last slide. While approaching the
+  // hero we *clamp* the scroll so a fast/accelerated scroll can never fly past
+  // the pin point — it always stops on the hero and locks.
   useEffect(() => {
     // The carousel's ends: at the last slide a downward scroll continues to the
     // section below; at the first slide an upward scroll continues above.
@@ -174,55 +176,56 @@ export default function Hero() {
       return ai === 0 && zoomRef.current === 0
     }
 
-    // Is the hero occupying the centre band of the viewport?
-    const isInZone = () => {
-      const el = heroRootRef.current
-      if (!el) return false
-      const vh = window.innerHeight
-      const r = el.getBoundingClientRect()
-      return r.top <= vh * 0.25 && r.bottom >= vh * 0.75
-    }
-
-    // Snap the page so the hero exactly fills the viewport.
-    const snapToHero = () => {
+    const process = (down: boolean, mag: number, big: boolean, prevent: () => void) => {
       const el = heroRootRef.current
       if (!el) return
-      const top = window.scrollY + el.getBoundingClientRect().top
-      window.scrollTo({ top, behavior: 'instant' as ScrollBehavior })
-    }
+      const vh = window.innerHeight
+      const r = el.getBoundingClientRect()
+      const heroTop = window.scrollY + r.top // document Y where the hero pins
 
-    // Returns true if the event was consumed (caller must not let it scroll).
-    const drive = (down: boolean, magnitude: number, big: boolean, prevent: () => void) => {
+      // While locked, hold the page static and drive the carousel.
       if (lockedRef.current) {
-        if (big && atEndBoundary(down)) {
-          // Reached an end: release. The hero must leave the centre band before
-          // it can lock again, so we keep it disarmed.
-          lockedRef.current = false
-          return false
+        if (!big) {
+          prevent()
+          return
         }
-        // Stay static and drive the carousel.
+        if (atEndBoundary(down)) {
+          // Release at an end: let this event scroll natively to the neighbour.
+          lockedRef.current = false
+          armedRef.current = false // must leave the viewport before re-locking
+          return
+        }
         prevent()
-        if (big) handleHeroScroll(down ? 'down' : 'up')
-        return true
+        handleHeroScroll(down ? 'down' : 'up')
+        return
       }
-      // Not locked yet.
-      if (!isInZone()) {
-        armedRef.current = true // left the band -> ready to lock on re-entry
-        return false
+
+      // Not locked. Only engage while the hero overlaps the viewport.
+      const overlaps = r.bottom > 0 && r.top < vh
+      if (!overlaps) {
+        armedRef.current = true // hero left the viewport -> ready to re-lock
+        return
       }
-      if (!armedRef.current) return false // released here; let it scroll past
-      if (!big) return false // wait for a decisive scroll before locking
-      lockedRef.current = true
-      armedRef.current = false
-      snapToHero()
+      if (!armedRef.current) return // just released here; let it scroll past
+      if (!big) {
+        prevent()
+        return
+      }
+      // Clamp the approach so we stop exactly on the pin, then lock.
       prevent()
-      void magnitude
-      return true
+      const target = down
+        ? Math.min(window.scrollY + mag, heroTop)
+        : Math.max(window.scrollY - mag, heroTop)
+      window.scrollTo({ top: Math.max(0, target), behavior: 'instant' as ScrollBehavior })
+      if (Math.abs(target - heroTop) < 2) {
+        lockedRef.current = true
+        armedRef.current = false
+      }
     }
 
     const onWheel = (e: WheelEvent) => {
       const mag = Math.abs(e.deltaY)
-      drive(e.deltaY > 0, mag, mag >= 8, () => e.preventDefault())
+      process(e.deltaY > 0, mag, mag >= 8, () => e.preventDefault())
     }
 
     let touchStartY = 0
@@ -232,8 +235,8 @@ export default function Hero() {
     const onTouchMove = (e: TouchEvent) => {
       const delta = touchStartY - e.touches[0].clientY
       const mag = Math.abs(delta)
-      const consumed = drive(delta > 0, mag, mag >= 40, () => e.preventDefault())
-      if (mag >= 40 || consumed) touchStartY = e.touches[0].clientY
+      process(delta > 0, mag, mag >= 24, () => e.preventDefault())
+      if (mag >= 24) touchStartY = e.touches[0].clientY
     }
 
     window.addEventListener('wheel', onWheel, { passive: false })
