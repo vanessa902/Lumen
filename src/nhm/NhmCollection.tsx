@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Bone, Dna, Leaf, ArrowUpRight } from 'lucide-react'
+import { Laptop, Zap, Settings, ArrowUpRight } from 'lucide-react'
 import { chaptersData } from './data'
 import SandTransitionImage from './SandTransitionImage'
 
-const circleIcons = [Bone, Dna, Leaf]
+const circleIcons = [Laptop, Zap, Settings]
 
 export default function NhmCollection() {
   const [activeChapter, setActiveChapter] = useState(2)
@@ -23,7 +23,13 @@ export default function NhmCollection() {
 
       {/* 3B. Heading area */}
       <div className="relative z-10 px-8 md:px-16 pt-32 md:pt-48 mb-16 flex flex-col xl:flex-row justify-between gap-10">
-        <h2 className="text-[1.8rem] md:text-[3rem] lg:text-[3.8rem] xl:text-[4rem] leading-[1.15] font-medium tracking-tight text-white max-w-[60rem]">
+        <motion.h2
+          initial={{ opacity: 0, y: 28, filter: 'blur(12px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-[1.8rem] md:text-[3rem] lg:text-[3.8rem] xl:text-[4rem] leading-[1.15] font-medium tracking-tight text-white max-w-[60rem]"
+        >
           Everything You Need
           <span className="inline-flex gap-2 md:gap-3 align-middle mx-2 md:mx-4 translate-y-[-4px]">
             {circleIcons.map((Icon, i) => (
@@ -36,13 +42,13 @@ export default function NhmCollection() {
             ))}
           </span>
           to Run Your Business
-        </h2>
+        </motion.h2>
 
         <div className="xl:text-right shrink-0">
           <p className="text-[9px] md:text-[10px] font-mono tracking-widest text-gray-400 uppercase mb-6 leading-relaxed">
-            We don't just display fossils
+            Connect your favorite tools and platforms
             <br />
-            we share earth's story
+            to create a faster, more efficient workflow.
           </p>
           <div className="flex xl:justify-end gap-3 flex-wrap">
             {['Educational', 'Authentic', 'Inspiring'].map((t) => (

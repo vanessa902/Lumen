@@ -192,7 +192,7 @@ export default function LithosHero() {
             From a Single Platform
           </p>
           <button className="bg-[#419EFF] hover:bg-[#2f8be8] text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-lg hover:shadow-[#419EFF]/30">
-            Start Digging
+            Get Started
           </button>
         </div>
       </section>
