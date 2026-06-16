@@ -89,7 +89,7 @@ export default function NhmExplore() {
         src={DASHBOARD}
         alt="Lumentrack dashboard"
         draggable={false}
-        className="absolute left-1/2 -translate-x-1/2 bottom-[-40px] md:bottom-[-80px] w-[min(1200px,95vw)] z-0 select-none pointer-events-none rounded-b-[28px]"
+        className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[min(1200px,95vw)] z-0 select-none pointer-events-none rounded-b-[28px]"
       />
 
       {/* 2E. Bottom text */}
