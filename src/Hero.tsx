@@ -490,6 +490,29 @@ export default function Hero() {
           })}
         </div>
 
+        {/* Solar slide ("Book a demo now!") headline over the panel — matches the
+            first-section (Lithos) title: Haffer XH, regular line 1, semibold line 2. */}
+        {activeIndex === 2 && (
+          <div
+            key="solar-cta"
+            className="absolute inset-x-0 top-[12%] md:top-[14%] flex flex-col items-center text-center px-4 pointer-events-none select-none uppercase text-white leading-[0.95]"
+            style={{ zIndex: 40, animation: `th-fade 650ms ${EASE}` }}
+          >
+            <span
+              className="block text-[2.43rem] sm:text-[3.645rem] md:text-[4.86rem]"
+              style={{ fontFamily: "'Haffer XH', sans-serif", fontWeight: 400, letterSpacing: '-0.04em' }}
+            >
+              Book
+            </span>
+            <span
+              className="block text-[2.43rem] sm:text-[3.645rem] md:text-[4.86rem] -mt-1"
+              style={{ fontFamily: "'Haffer XH', sans-serif", fontWeight: 600, letterSpacing: '-0.05em' }}
+            >
+              A demo now!
+            </span>
+          </div>
+        )}
+
         {/* 5. Centered scroll hint */}
         <div
           className="absolute bottom-6 left-1/2 -translate-x-1/2 sm:bottom-12"
