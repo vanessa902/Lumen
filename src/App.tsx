@@ -8,11 +8,11 @@ export default function App() {
     <>
       {/* 1. Lithos hero is the first screen */}
       <LithosHero />
-      {/* 2. The Lumentrack scroll-jacked experience */}
-      <Hero />
-      {/* 3. The remaining NHM sections */}
+      {/* 2. NHM sections */}
       <NhmExplore />
       <NhmCollection />
+      {/* 3. The Lumentrack scroll-jacked experience (last) */}
+      <Hero />
     </>
   )
 }

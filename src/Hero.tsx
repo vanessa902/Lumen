@@ -5,8 +5,6 @@ import { ChevronDown } from 'lucide-react'
 // imports) so the build succeeds even before the files are added.
 const SOLAR_SRC = import.meta.env.BASE_URL + 'solar-panel.png'
 const CHAR2_SRC = import.meta.env.BASE_URL + 'character-2.png'
-// Lumentrack wordmark shown top-left on every slide.
-const LOGO_SRC = import.meta.env.BASE_URL + 'Group.svg'
 
 // Carousel slides: 0 = laptop mockup ("One platform."), 1 = text only
 // ("Every part of your business."), 2 = solar panel.
@@ -384,15 +382,6 @@ export default function Hero() {
             {TITLES[activeIndex]}
           </span>
         </div>
-
-        {/* 3. Top-left Lumentrack logo */}
-        <img
-          src={LOGO_SRC}
-          alt="Lumentrack"
-          draggable={false}
-          className="absolute left-4 sm:left-10"
-          style={{ top: 30, height: 18, width: 'auto', zIndex: 60, opacity: 0.95 }}
-        />
 
         {/* 4. Carousel */}
         <div className="absolute inset-0" style={{ zIndex: 3 }}>
