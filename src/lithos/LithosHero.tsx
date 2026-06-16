@@ -176,9 +176,8 @@ export default function LithosHero() {
           style={{ animationDelay: '0.7s' }}
         >
           <p className="text-sm text-white/80 leading-relaxed">
-            Stop jumping between 10 different tools. Lumentrack unifies CRM, proposal design,
-            production modeling, commissions, scheduling, and internal workflows into one simple
-            system that your entire team can use.
+            Lumentrack unifies CRM, proposal design, production planning, commissions, scheduling,
+            and operations into one streamlined system.
           </p>
         </div>
 
@@ -192,7 +191,7 @@ export default function LithosHero() {
             <br />
             From a Single Platform
           </p>
-          <button className="bg-[#e8702a] hover:bg-[#d2611f] text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-lg hover:shadow-[#e8702a]/30">
+          <button className="bg-[#419EFF] hover:bg-[#2f8be8] text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-lg hover:shadow-[#419EFF]/30">
             Start Digging
           </button>
         </div>
