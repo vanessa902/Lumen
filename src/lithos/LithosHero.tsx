@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Menu } from 'lucide-react'
-
-const BG_IMAGE_1 = import.meta.env.BASE_URL + 'hero-base.jpg'
-const BG_IMAGE_2 = import.meta.env.BASE_URL + 'hero-reveal.jpg'
+// Imported (not /public) so Vite fingerprints the filename and the browser
+// never serves a stale cached image after a swap.
+import BG_IMAGE_1 from './hero-base.jpg'
+import BG_IMAGE_2 from './hero-reveal.jpg'
 
 const SPOTLIGHT_R = 260
 
