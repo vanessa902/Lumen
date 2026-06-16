@@ -1,8 +1,10 @@
 // Shared data + asset URLs for the Natural History Museum (NHM) sections.
 
+import taskboardImg from './taskboard.png'
+
 export const chaptersData = [
   { name: 'Install Tracker / CRM', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624247/01_udnber.png' },
-  { name: 'TaskBoard', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624374/02_pmvxxl.png' },
+  { name: 'TaskBoard', image: taskboardImg },
   { name: 'Calendar', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624236/03_hcp3jc.png' },
   { name: 'Install Validation', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624256/04_get63z.png' },
   { name: 'Commission Tracker', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624251/05_kz1tyu.png' },

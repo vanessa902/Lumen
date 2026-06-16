@@ -82,25 +82,15 @@ export default function NhmExplore() {
         ))}
       </motion.div>
 
-      {/* 2D. Dashboard mockup: rises into this white space and its lower edge
-          is tucked behind the black section below (which has a higher z-index). */}
+      {/* 2D. Dashboard mockup: rises into this white space and connects flush
+          (square bottom) with the black section below. */}
       <div className="h-[180px] sm:h-[260px] md:h-[340px]" />
       <img
         src={DASHBOARD}
         alt="Lumentrack dashboard"
         draggable={false}
-        className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[min(1200px,95vw)] z-0 select-none pointer-events-none rounded-b-[28px]"
+        className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[min(1200px,95vw)] z-0 select-none pointer-events-none"
       />
-
-      {/* 2E. Bottom text */}
-      <div className="absolute bottom-0 inset-x-0 flex justify-between px-8 md:px-16 pb-8 md:pb-12 pointer-events-none">
-        <span className="hidden md:block text-[10px] font-mono tracking-widest uppercase text-gray-500 font-medium">
-          We don't just tell stories.
-        </span>
-        <span className="hidden md:block text-[10px] font-mono tracking-widest uppercase text-gray-500 font-medium">
-          Paleontology (C) 2026
-        </span>
-      </div>
     </section>
   )
 }
