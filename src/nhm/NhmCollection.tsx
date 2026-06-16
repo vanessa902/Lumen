@@ -33,7 +33,7 @@ export default function NhmCollection() {
       {/* 3B. Heading area */}
       <div className="relative z-10 px-8 md:px-16 pt-32 md:pt-48 mb-16 flex flex-col xl:flex-row justify-between gap-10">
         <h2 className="text-[1.8rem] md:text-[3rem] lg:text-[3.8rem] xl:text-[4rem] leading-[1.15] font-medium tracking-tight text-white max-w-[60rem]">
-          Curated from millions of years of wonder
+          Everything You Need
           <span className="inline-flex gap-2 md:gap-3 align-middle mx-2 md:mx-4 translate-y-[-4px]">
             {circleIcons.map((Icon, i) => (
               <span
@@ -44,7 +44,7 @@ export default function NhmCollection() {
               </span>
             ))}
           </span>
-          & discovery.
+          to Run Your Business
         </h2>
 
         <div className="xl:text-right shrink-0">
