@@ -9,31 +9,8 @@ const SPOTLIGHT_R = 260
 // Lumentrack wordmark (replaces the Lithos logo).
 const LUMENTRACK_LOGO = import.meta.env.BASE_URL + 'Group.svg'
 
-// Both image layers sit inside this centred frame (smaller than the viewport,
-// with breathing room around them).
-const FRAME =
-  'absolute top-[10%] bottom-[10%] left-[6%] right-[6%] md:top-[12%] md:bottom-[12%] md:left-[14%] md:right-[14%]'
-
-// Feathers all four edges of the frame so the photo blends into the black
-// background instead of showing a hard border. Two gradients composited
-// together (intersect) fade each side.
-const FEATHER_X = 'linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%)'
-const FEATHER_Y = 'linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%)'
-const FEATHER = `${FEATHER_X}, ${FEATHER_Y}`
-
-const featherStyle = {
-  WebkitMaskImage: FEATHER,
-  maskImage: FEATHER,
-  WebkitMaskRepeat: 'no-repeat, no-repeat',
-  maskRepeat: 'no-repeat, no-repeat',
-  WebkitMaskComposite: 'source-in',
-  maskComposite: 'intersect',
-} as const
-
 // Reveals BG_IMAGE_2 only inside a soft glowing circle that trails the cursor,
-// using a canvas-drawn radial gradient as a CSS mask, intersected with the
-// frame's edge feather. The canvas is sized to the frame so the spotlight is
-// computed in frame-local coordinates and stays aligned with the cursor.
+// using a canvas-drawn radial gradient as a CSS mask on the reveal layer.
 function RevealLayer({
   image,
   cursorX,
@@ -43,39 +20,28 @@ function RevealLayer({
   cursorX: number
   cursorY: number
 }) {
-  const frameRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [mask, setMask] = useState<string | undefined>()
 
   useEffect(() => {
-    const sync = () => {
-      const el = frameRef.current
-      const c = canvasRef.current
-      if (!el || !c) return
-      const r = el.getBoundingClientRect()
-      c.width = Math.max(1, Math.round(r.width))
-      c.height = Math.max(1, Math.round(r.height))
+    const c = canvasRef.current
+    if (!c) return
+    const resize = () => {
+      c.width = window.innerWidth
+      c.height = window.innerHeight
     }
-    sync()
-    window.addEventListener('resize', sync)
-    return () => window.removeEventListener('resize', sync)
+    resize()
+    window.addEventListener('resize', resize)
+    return () => window.removeEventListener('resize', resize)
   }, [])
 
   useEffect(() => {
-    const el = frameRef.current
     const c = canvasRef.current
-    if (!el || !c) return
+    if (!c) return
     const ctx = c.getContext('2d')
     if (!ctx) return
-    const r = el.getBoundingClientRect()
-    if (c.width !== Math.round(r.width) || c.height !== Math.round(r.height)) {
-      c.width = Math.max(1, Math.round(r.width))
-      c.height = Math.max(1, Math.round(r.height))
-    }
-    const lx = cursorX - r.left
-    const ly = cursorY - r.top
     ctx.clearRect(0, 0, c.width, c.height)
-    const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, SPOTLIGHT_R)
+    const g = ctx.createRadialGradient(cursorX, cursorY, 0, cursorX, cursorY, SPOTLIGHT_R)
     g.addColorStop(0, 'rgba(255,255,255,1)')
     g.addColorStop(0.4, 'rgba(255,255,255,1)')
     g.addColorStop(0.6, 'rgba(255,255,255,0.75)')
@@ -84,29 +50,22 @@ function RevealLayer({
     g.addColorStop(1, 'rgba(255,255,255,0)')
     ctx.fillStyle = g
     ctx.beginPath()
-    ctx.arc(lx, ly, SPOTLIGHT_R, 0, Math.PI * 2)
+    ctx.arc(cursorX, cursorY, SPOTLIGHT_R, 0, Math.PI * 2)
     ctx.fill()
     setMask(c.toDataURL())
   }, [cursorX, cursorY])
-
-  const spotlight = mask ? `url(${mask})` : 'linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0))'
 
   return (
     <>
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ display: 'none' }} />
       <div
-        ref={frameRef}
-        className={`${FRAME} bg-center bg-cover bg-no-repeat z-30 pointer-events-none`}
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-30 pointer-events-none"
         style={{
           backgroundImage: `url("${image}")`,
-          WebkitMaskImage: `${spotlight}, ${FEATHER}`,
-          maskImage: `${spotlight}, ${FEATHER}`,
-          WebkitMaskSize: '100% 100%, 100% 100%, 100% 100%',
-          maskSize: '100% 100%, 100% 100%, 100% 100%',
-          WebkitMaskRepeat: 'no-repeat, no-repeat, no-repeat',
-          maskRepeat: 'no-repeat, no-repeat, no-repeat',
-          WebkitMaskComposite: 'source-in, source-in',
-          maskComposite: 'intersect, intersect',
+          WebkitMaskImage: mask ? `url(${mask})` : undefined,
+          maskImage: mask ? `url(${mask})` : undefined,
+          WebkitMaskSize: '100% 100%',
+          maskSize: '100% 100%',
         }}
       />
     </>
@@ -175,8 +134,8 @@ export default function LithosHero() {
       >
         {/* 1. Base image */}
         <div
-          className={`${FRAME} bg-center bg-cover bg-no-repeat z-10 hero-zoom`}
-          style={{ backgroundImage: `url("${BG_IMAGE_1}")`, ...featherStyle }}
+          className="absolute inset-0 bg-center bg-cover bg-no-repeat z-10 hero-zoom"
+          style={{ backgroundImage: `url("${BG_IMAGE_1}")` }}
         />
 
         {/* 2. Cursor-spotlight reveal layer */}
