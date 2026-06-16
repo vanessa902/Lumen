@@ -1,4 +1,5 @@
-import { motion } from 'motion/react'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'motion/react'
 import { Bone, Dna, Gem, Leaf, BookOpen } from 'lucide-react'
 
 const pills = [
@@ -9,7 +10,27 @@ const pills = [
   { icon: BookOpen, label: 'Learn More' },
 ]
 
+const HEADING = 'The all-in-one operating system for contractors and service businesses.'
+
 export default function NhmExplore() {
+  // Typewriter: transcribe the heading once the section scrolls into view.
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const inView = useInView(headingRef, { once: true, margin: '-80px' })
+  const [count, setCount] = useState(0)
+  useEffect(() => {
+    if (!inView) return
+    const id = setInterval(() => {
+      setCount((c) => {
+        if (c >= HEADING.length) {
+          clearInterval(id)
+          return c
+        }
+        return c + 1
+      })
+    }, 32)
+    return () => clearInterval(id)
+  }, [inView])
+
   return (
     <section className="relative w-full min-h-[75vh] md:min-h-screen bg-[#fcfcfc] text-[#111] font-sans flex flex-col items-center pt-24 md:pt-32 pb-0 z-20">
       {/* 2A. Section label */}
@@ -18,17 +39,26 @@ export default function NhmExplore() {
         <span className="text-gray-900 font-bold uppercase">Explore Our World</span>
       </p>
 
-      {/* 2B. Main heading */}
-      <motion.h2
-        initial={{ y: 40, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="text-[2.2rem] md:text-[3.5rem] lg:text-[4.2rem] leading-[1.1] font-medium tracking-tight text-[#111] text-center max-w-[1000px] px-6"
+      {/* 2B. Main heading (typewriter on scroll-in) */}
+      <h2
+        ref={headingRef}
+        aria-label={HEADING}
+        className="relative text-[2.2rem] md:text-[3.5rem] lg:text-[4.2rem] leading-[1.1] font-medium tracking-tight text-[#111] text-center max-w-[1000px] px-6"
       >
-        The all-in-one operating system for
-        <br className="hidden md:block" /> contractors and service businesses.
-      </motion.h2>
+        {/* Invisible full text reserves the final height (no layout shift) */}
+        <span className="invisible" aria-hidden="true">
+          The all-in-one operating system for
+          <br className="hidden md:block" /> contractors and service businesses.
+        </span>
+        {/* Typed overlay */}
+        <span className="absolute inset-0" aria-hidden="true">
+          {HEADING.slice(0, count)}
+          <span
+            className="ml-1 inline-block w-[3px] md:w-[4px] bg-[#111] align-[-0.05em] animate-pulse"
+            style={{ height: '0.85em' }}
+          />
+        </span>
+      </h2>
 
       {/* 2C. Action pills */}
       <motion.div
