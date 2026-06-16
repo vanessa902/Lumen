@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
 import { Bone, Dna, Gem, Leaf, BookOpen } from 'lucide-react'
+import DASHBOARD from './dashboard.png'
 
 const pills = [
   { icon: Bone, label: 'Dinosaurs' },
@@ -81,8 +82,15 @@ export default function NhmExplore() {
         ))}
       </motion.div>
 
-      {/* 2D. Spacer for the pterodactyl from Section 3 to overlap into */}
-      <div className="min-h-[220px] md:min-h-[450px]" />
+      {/* 2D. Dashboard mockup: rises into this white space and its lower edge
+          is tucked behind the black section below (which has a higher z-index). */}
+      <div className="h-[180px] sm:h-[260px] md:h-[340px]" />
+      <img
+        src={DASHBOARD}
+        alt="Lumentrack dashboard"
+        draggable={false}
+        className="absolute left-1/2 -translate-x-1/2 bottom-[-40px] md:bottom-[-80px] w-[min(1200px,95vw)] z-0 select-none pointer-events-none rounded-b-[28px]"
+      />
 
       {/* 2E. Bottom text */}
       <div className="absolute bottom-0 inset-x-0 flex justify-between px-8 md:px-16 pb-8 md:pb-12 pointer-events-none">

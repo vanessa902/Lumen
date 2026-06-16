@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Bone, Dna, Leaf, ArrowUpRight } from 'lucide-react'
-import { chaptersData, PTERODACTYL_IMG } from './data'
+import { chaptersData } from './data'
 import SandTransitionImage from './SandTransitionImage'
 
 const circleIcons = [Bone, Dna, Leaf]
@@ -19,16 +19,7 @@ export default function NhmCollection() {
 
   return (
     <section className="relative w-full bg-[#0a0a0a] text-white flex flex-col z-30 font-sans overflow-hidden">
-      {/* 3A. Pterodactyl overlapping image */}
-      <motion.img
-        src={PTERODACTYL_IMG}
-        alt=""
-        initial={{ y: '-65%', opacity: 0 }}
-        whileInView={{ y: '-78%', opacity: 1 }}
-        viewport={{ margin: '100px' }}
-        transition={{ duration: 1.4, ease: 'easeOut' }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[160vw] md:w-[1100px] max-w-none pointer-events-none z-0"
-      />
+      {/* 3A. (Dashboard mockup from the section above tucks behind this top edge) */}
 
       {/* 3B. Heading area */}
       <div className="relative z-10 px-8 md:px-16 pt-32 md:pt-48 mb-16 flex flex-col xl:flex-row justify-between gap-10">
