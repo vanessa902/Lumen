@@ -62,6 +62,24 @@
   }
 }
 
+/* Infinite marquee strip (4 identical copies; shift by one copy = seamless) */
+@keyframes nhmMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-25%);
+  }
+}
+.nhm-marquee-track {
+  animation: nhmMarquee 28s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nhm-marquee-track {
+    animation: none;
+  }
+}
+
 @font-face {
   font-family: 'Haffer XH';
   src: url('./fonts/HafferXH-TRIAL-Regular.otf') format('opentype');
