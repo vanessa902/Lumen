@@ -145,7 +145,7 @@ export default function LithosHero() {
         <div className="absolute top-[14%] left-0 right-0 z-50 flex flex-col items-center text-center px-5 pointer-events-none">
           <h1 className="text-white leading-[0.95] uppercase">
             <span
-              className="block text-5xl sm:text-7xl md:text-8xl hero-anim hero-reveal"
+              className="block text-[2.7rem] sm:text-[4.05rem] md:text-[5.4rem] hero-anim hero-reveal"
               style={{
                 fontFamily: "'Haffer XH', sans-serif",
                 fontWeight: 400,
@@ -156,7 +156,7 @@ export default function LithosHero() {
               One Platform.
             </span>
             <span
-              className="block text-5xl sm:text-7xl md:text-8xl -mt-1 hero-anim hero-reveal"
+              className="block text-[2.7rem] sm:text-[4.05rem] md:text-[5.4rem] -mt-1 hero-anim hero-reveal"
               style={{
                 fontFamily: "'Haffer XH', sans-serif",
                 fontWeight: 600,
