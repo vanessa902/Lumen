@@ -3,12 +3,14 @@
 import taskboardImg from './taskboard.png'
 import calendarImg from './calendar.png'
 import commissionImg from './commission.png'
+import installTrackerImg from './install-tracker.png'
+import installValidationImg from './install-validation.png'
 
 export const chaptersData = [
-  { name: 'Install Tracker / CRM', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624247/01_udnber.png' },
+  { name: 'Install Tracker / CRM', image: installTrackerImg },
   { name: 'TaskBoard', image: taskboardImg },
   { name: 'Calendar', image: calendarImg },
-  { name: 'Install Validation', image: 'https://res.cloudinary.com/dsdxaxkiz/image/upload/v1779624256/04_get63z.png' },
+  { name: 'Install Validation', image: installValidationImg },
   { name: 'Commission Tracker', image: commissionImg },
 ]
 
