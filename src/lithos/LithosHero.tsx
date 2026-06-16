@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Menu } from 'lucide-react'
 
-const BG_IMAGE_1 = import.meta.env.BASE_URL + 'hero-base.png'
-const BG_IMAGE_2 = import.meta.env.BASE_URL + 'hero-reveal.png'
+const BG_IMAGE_1 = import.meta.env.BASE_URL + 'hero-base.jpg'
+const BG_IMAGE_2 = import.meta.env.BASE_URL + 'hero-reveal.jpg'
 
 const SPOTLIGHT_R = 260
 
